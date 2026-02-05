@@ -8,6 +8,7 @@ import About from '../pages/About';
 import Pricing from '../pages/Pricing';
 import Services from '../pages/Services';
 import Contact from '../pages/Contact';
+import TechNews from '../pages/TechNews';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
 import Dashboard from '../pages/Dashboard/Dashboard';
@@ -53,6 +54,7 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/" element={<HomeOrRedirect />} />
         <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+        <Route path="/tech-news" element={<PublicLayout><TechNews /></PublicLayout>} />
         <Route path="/pricing" element={<PublicLayout><Pricing /></PublicLayout>} />
         <Route path="/services" element={<PublicLayout><Services /></PublicLayout>} />
         <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
