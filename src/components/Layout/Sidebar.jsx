@@ -3,6 +3,8 @@ import { useAuth } from '../../context/AuthContext';
 import {
   FiHome,
   FiFileText,
+  FiAward,
+  FiMap,
   FiUploadCloud,
   FiMessageSquare,
   FiPlusCircle,
@@ -19,9 +21,9 @@ import './Layout.css';
 const navByRole = {
   USER: [
     { to: '/dashboard', label: 'Dashboard', icon: FiHome },
-    { to: '/documents', label: 'Documents', icon: FiFileText },
-    { to: '/documents#hall-tickets', label: 'Hall Tickets', icon: FiFileText },
-    { to: '/documents#results', label: 'Results', icon: FiFileText },
+    { to: '/documents/hall-tickets', label: 'Hall Tickets', icon: FiFileText },
+    { to: '/documents/results', label: 'Results', icon: FiAward },
+    { to: '/documents/roadmaps', label: 'AI Roadmaps', icon: FiMap },
     { to: '/tickets/new', label: 'Create Ticket', icon: FiPlusCircle },
     { to: '/tickets', label: 'My Tickets', icon: FiMessageSquare },
     { to: '/predictor', label: 'College Predictor', icon: FiTrendingUp },
@@ -77,9 +79,7 @@ export default function Sidebar({ open, onClose }) {
         </button>
         <nav className="sidebar-nav">
           {items.map(({ to, label, icon: Icon }) => {
-            const isActive = to.includes('#')
-              ? location.pathname + (location.hash || '') === to
-              : location.pathname === to && !location.hash;
+            const isActive = location.pathname === to;
             return (
               <Link
                 key={to}

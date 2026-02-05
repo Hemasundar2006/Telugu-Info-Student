@@ -1,13 +1,19 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { FiMenu, FiLogOut, FiUser, FiSearch } from 'react-icons/fi';
 import './Layout.css';
 
 export default function Header({ onMenuClick }) {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navClass = (path, exact) =>
+    `app-nav-link${exact ? pathname === path : pathname.startsWith(path) ? ' active' : ''}`;
 
   const initials = user?.name
     ? user.name.trim().split(/\s+/).map((n) => n[0]).join('').toUpperCase().slice(0, 2)
@@ -32,11 +38,20 @@ export default function Header({ onMenuClick }) {
         </div>
       </Link>
       <nav className="app-nav">
-        <Link to="/dashboard" className="app-nav-link">Home</Link>
-        <Link to="/documents" className="app-nav-link">Documents</Link>
-        <Link to="/predictor" className="app-nav-link">Predictor</Link>
+        <Link to="/dashboard" className={navClass('/dashboard', true)}>Home</Link>
+        <Link to="/documents" className={navClass('/documents', false)}>Documents</Link>
+        <Link to="/tech-news" className={navClass('/tech-news', true)}>Tech News</Link>
+        <Link to="/predictor" className={navClass('/predictor', true)}>Predictor</Link>
       </nav>
       <div className="header-right">
+        <button
+          type="button"
+          className="theme-toggle-btn-header"
+          onClick={toggleTheme}
+          aria-label="Toggle theme"
+        >
+          {theme === 'dark' ? '🌙' : '☀️'}
+        </button>
         <button type="button" className="icon-btn" aria-label="Search">
           <FiSearch size={20} />
         </button>

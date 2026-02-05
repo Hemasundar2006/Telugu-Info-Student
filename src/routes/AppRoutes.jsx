@@ -13,6 +13,9 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import Dashboard from '../pages/Dashboard/Dashboard';
 import DocumentList from '../pages/Documents/DocumentList';
+import HallTickets from '../pages/Documents/HallTickets';
+import Results from '../pages/Documents/Results';
+import Roadmaps from '../pages/Documents/Roadmaps';
 import UploadDocument from '../pages/Documents/UploadDocument';
 import PendingDocuments from '../pages/Documents/PendingDocuments';
 import MyUploads from '../pages/Documents/MyUploads';
@@ -48,13 +51,30 @@ function HomeOrRedirect() {
   );
 }
 
+function TechNewsRoute() {
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return <div className="page-loading"><div className="spinner" /><p>Loading...</p></div>;
+  if (isAuthenticated) {
+    return (
+      <ProtectedRoute>
+        <Layout><TechNews /></Layout>
+      </ProtectedRoute>
+    );
+  }
+  return (
+    <PublicLayout>
+      <TechNews />
+    </PublicLayout>
+  );
+}
+
 export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomeOrRedirect />} />
         <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
-        <Route path="/tech-news" element={<PublicLayout><TechNews /></PublicLayout>} />
+        <Route path="/tech-news" element={<TechNewsRoute />} />
         <Route path="/pricing" element={<PublicLayout><Pricing /></PublicLayout>} />
         <Route path="/services" element={<PublicLayout><Services /></PublicLayout>} />
         <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
@@ -81,6 +101,9 @@ export default function AppRoutes() {
         />
 
         <Route path="/documents" element={<ProtectedRoute><Layout><DocumentList /></Layout></ProtectedRoute>} />
+        <Route path="/documents/hall-tickets" element={<ProtectedRoute><Layout><HallTickets /></Layout></ProtectedRoute>} />
+        <Route path="/documents/results" element={<ProtectedRoute><Layout><Results /></Layout></ProtectedRoute>} />
+        <Route path="/documents/roadmaps" element={<ProtectedRoute><Layout><Roadmaps /></Layout></ProtectedRoute>} />
         <Route path="/documents/upload" element={<ProtectedRoute allowedRoles={['SUPPORT', 'ADMIN', 'SUPER_ADMIN']}><Layout><UploadDocument /></Layout></ProtectedRoute>} />
         <Route path="/documents/my-uploads" element={<ProtectedRoute allowedRoles={['SUPPORT', 'ADMIN', 'SUPER_ADMIN']}><Layout><MyUploads /></Layout></ProtectedRoute>} />
         <Route path="/documents/pending" element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']}><Layout><PendingDocuments /></Layout></ProtectedRoute>} />

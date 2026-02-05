@@ -75,7 +75,7 @@ export default function TechNews() {
         <div>
           <h1>Tech News</h1>
           <p className="technews-subtitle">
-            Daily tech updates fetched from NewsData API.
+            Daily tech updates fetched from NewsData
           </p>
         </div>
         <button
