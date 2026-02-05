@@ -1,0 +1,66 @@
+.predictor-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.predictor-page h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.predictor-page .section-desc {
+  margin: 0 0 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+}
+
+.predictor-form {
+  max-width: 560px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.predictor-results {
+  margin-top: 2rem;
+}
+
+.predictor-results h2 {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.results-table-wrap {
+  overflow-x: auto;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.predictor-page .doc-table th,
+.predictor-page .doc-table td {
+  color: #e5e7eb;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.predictor-page .doc-table th {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.empty-hint {
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+}
