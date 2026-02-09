@@ -49,7 +49,16 @@ export async function getNextQuestion(history) {
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.message || `Gemini API error: ${res.status}`);
+    const errorMsg = err?.error?.message || `Gemini API error: ${res.status}`;
+    
+    // Detect quota exceeded errors
+    if (errorMsg.includes('quota') || errorMsg.includes('Quota exceeded') || res.status === 429) {
+      const quotaError = new Error('API quota exceeded. Please check your Google Cloud billing and enable the Gemini API. See: https://ai.google.dev/gemini-api/docs/rate-limits');
+      quotaError.isQuotaError = true;
+      throw quotaError;
+    }
+    
+    throw new Error(errorMsg);
   }
 
   const data = await res.json();
@@ -111,7 +120,16 @@ Use simple words. If they are in 10th/12th, include the immediate education step
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.message || `Gemini API error: ${res.status}`);
+    const errorMsg = err?.error?.message || `Gemini API error: ${res.status}`;
+    
+    // Detect quota exceeded errors
+    if (errorMsg.includes('quota') || errorMsg.includes('Quota exceeded') || res.status === 429) {
+      const quotaError = new Error('API quota exceeded. Please check your Google Cloud billing and enable the Gemini API. See: https://ai.google.dev/gemini-api/docs/rate-limits');
+      quotaError.isQuotaError = true;
+      throw quotaError;
+    }
+    
+    throw new Error(errorMsg);
   }
 
   const data = await res.json();

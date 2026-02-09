@@ -48,8 +48,18 @@ export default function AiCareer() {
         setAppState(AppState.QUESTIONNAIRE);
       } catch (err) {
         console.error(err);
-        setError(handleApiError(err));
-        toast.error(handleApiError(err));
+        const errorMsg = handleApiError(err);
+        setError(errorMsg);
+        
+        // Show special message for quota errors
+        if (err?.isQuotaError || errorMsg.includes('quota')) {
+          toast.error('API quota exceeded. Please check your Google Cloud settings.', {
+            duration: 6000,
+            icon: '⚠️',
+          });
+        } else {
+          toast.error(errorMsg);
+        }
         setAppState(AppState.QUESTIONNAIRE);
       }
     }
@@ -64,8 +74,18 @@ export default function AiCareer() {
       setAppState(AppState.ROADMAP);
     } catch (err) {
       console.error(err);
-      setError(handleApiError(err));
-      toast.error(handleApiError(err));
+      const errorMsg = handleApiError(err);
+      setError(errorMsg);
+      
+      // Show special message for quota errors
+      if (err?.isQuotaError || errorMsg.includes('quota')) {
+        toast.error('API quota exceeded. Please check your Google Cloud settings.', {
+          duration: 6000,
+          icon: '⚠️',
+        });
+      } else {
+        toast.error(errorMsg);
+      }
       setAppState(AppState.QUESTIONNAIRE);
     }
   };
@@ -166,7 +186,24 @@ export default function AiCareer() {
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div className="text-left">
                   <p className="text-xs text-slate-500 italic">Hint: Be as specific as you can for better results.</p>
-                  {error && <p className="text-red-400 text-sm mt-1 font-semibold">{error}</p>}
+                  {error && (
+                    <div className="mt-2">
+                      <p className={`text-sm font-semibold ${error.includes('quota') ? 'text-yellow-400' : 'text-red-400'}`}>
+                        {error}
+                      </p>
+                      {error.includes('quota') && (
+                        <div className="mt-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-xs text-yellow-300">
+                          <p className="font-semibold mb-1">How to fix:</p>
+                          <ol className="list-decimal list-inside space-y-1 ml-2">
+                            <li>Go to <a href="https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-yellow-200">Google Cloud Console</a></li>
+                            <li>Enable the "Generative Language API"</li>
+                            <li>Check billing/quota settings</li>
+                            <li>Wait 15-20 seconds and try again</li>
+                          </ol>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <Button onClick={handleNext} disabled={!userInput.trim()} className="w-full sm:w-48 py-4 text-lg">
                   {questionCount === MAX_QUESTIONS ? 'Finish & Generate' : 'Continue'}
