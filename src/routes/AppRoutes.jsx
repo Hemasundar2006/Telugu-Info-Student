@@ -27,7 +27,7 @@ import ActivityDashboard from '../pages/Activities/ActivityDashboard';
 import ActivityStats from '../pages/Activities/ActivityStats';
 import UserActivities from '../pages/Activities/UserActivities';
 import CollegePredictor from '../pages/Predictor/CollegePredictor';
-import AiCareer from '../pages/AiCareer/AiCareer';
+import AiCareer from '../pages/AICareer/AiCareer';
 import Profile from '../pages/Profile';
 import Unauthorized from '../pages/Unauthorized';
 import ForgotPassword from '../pages/ForgotPassword';
