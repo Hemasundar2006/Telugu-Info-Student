@@ -33,6 +33,9 @@ export default function PublicLayout({ children }) {
           <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>Home</Link>
           <Link to="/about" className={`nav-link ${isActive('/about') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>About</Link>
           <Link to="/tech-news" className={`nav-link ${isActive('/tech-news') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>Tech News</Link>
+          <Link to="/ai-career" className={`nav-link nav-link-premium ${isActive('/ai-career') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>
+            AI Career <span className="nav-premium-badge" title="Premium">★</span>
+          </Link>
           <Link to="/pricing" className={`nav-link ${isActive('/pricing') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>Pricing</Link>
           <Link to="/services" className={`nav-link ${isActive('/services') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>Services</Link>
           <Link to="/contact" className={`nav-link ${isActive('/contact') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>Contact</Link>

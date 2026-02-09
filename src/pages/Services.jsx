@@ -4,6 +4,7 @@ import './PublicPages.css';
 
 const services = [
   {
+    href: '/ai-career',
     icon: FiTarget,
     title: 'AI Career Guidance & Roadmaps',
     desc: 'Personalised, AI-driven guidance and roadmaps to help you choose the right stream, course, and career direction at any stage.',

@@ -41,6 +41,7 @@ export default function Header({ onMenuClick }) {
         <Link to="/dashboard" className={navClass('/dashboard', true)}>Home</Link>
         <Link to="/documents" className={navClass('/documents', false)}>Documents</Link>
         <Link to="/tech-news" className={navClass('/tech-news', true)}>Tech News</Link>
+        <Link to="/ai-career" className={navClass('/ai-career', true)}>AI Career</Link>
         <Link to="/predictor" className={navClass('/predictor', true)}>Predictor</Link>
       </nav>
       <div className="header-right">

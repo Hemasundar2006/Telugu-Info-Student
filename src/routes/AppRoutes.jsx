@@ -27,6 +27,7 @@ import ActivityDashboard from '../pages/Activities/ActivityDashboard';
 import ActivityStats from '../pages/Activities/ActivityStats';
 import UserActivities from '../pages/Activities/UserActivities';
 import CollegePredictor from '../pages/Predictor/CollegePredictor';
+import AiCareer from '../pages/AiCareer/AiCareer';
 import Profile from '../pages/Profile';
 import Unauthorized from '../pages/Unauthorized';
 import ForgotPassword from '../pages/ForgotPassword';
@@ -119,6 +120,7 @@ export default function AppRoutes() {
         <Route path="/activities/user/:userId" element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']}><Layout><UserActivities /></Layout></ProtectedRoute>} />
 
         <Route path="/predictor" element={<ProtectedRoute><Layout><CollegePredictor /></Layout></ProtectedRoute>} />
+        <Route path="/ai-career" element={<ProtectedRoute><Layout><AiCareer /></Layout></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

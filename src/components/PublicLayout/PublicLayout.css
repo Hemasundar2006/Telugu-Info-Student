@@ -147,6 +147,23 @@
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
+.nav-premium-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px;
+  font-size: 0.7rem;
+  color: #fbbf24;
+  font-weight: 700;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.nav-link-premium:hover .nav-premium-badge,
+.nav-link-premium.active .nav-premium-badge {
+  color: #fde047;
+}
+
 .header-login {
   color: #60a5fa;
   font-weight: 500;
@@ -222,6 +239,11 @@
   .landing-nav.landing-nav-open .nav-link:nth-child(4) { animation-delay: 0.11s; }
   .landing-nav.landing-nav-open .nav-link:nth-child(5) { animation-delay: 0.14s; }
   .landing-nav.landing-nav-open .nav-link:nth-child(6) { animation-delay: 0.17s; }
+  .landing-nav.landing-nav-open .nav-link:nth-child(7) { animation-delay: 0.20s; }
+  .landing-nav.landing-nav-open .nav-link:nth-child(8) { animation-delay: 0.23s; }
+  .landing-nav.landing-nav-open .nav-link:nth-child(9) { animation-delay: 0.26s; }
+  .landing-nav.landing-nav-open .nav-link:nth-child(10) { animation-delay: 0.29s; }
+  .landing-nav.landing-nav-open .nav-link:nth-child(11) { animation-delay: 0.32s; }
 }
 
 @keyframes landingNavFadeIn {

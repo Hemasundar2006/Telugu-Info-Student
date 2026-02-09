@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -17,8 +17,10 @@ const schema = yup.object({
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login: setAuth } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const from = location.state?.from?.pathname || '/dashboard';
 
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(schema),
@@ -31,7 +33,7 @@ export default function Login() {
       if (res.success && res.token) {
         setAuth(res.token, res.user || res);
         toast.success('Logged in successfully');
-        navigate('/dashboard', { replace: true });
+        navigate(from, { replace: true });
       } else {
         toast.error(res.error || 'Login failed');
       }
