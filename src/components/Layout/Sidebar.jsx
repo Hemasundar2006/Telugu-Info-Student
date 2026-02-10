@@ -36,12 +36,15 @@ const navByRole = {
     { to: '/documents/upload', label: 'Upload Document', icon: FiUploadCloud },
     { to: '/documents/my-uploads', label: 'My Uploads', icon: FiGrid },
     { to: '/tickets/support', label: 'Tickets', icon: FiMessageSquare },
+    { to: '/chats/support-admin', label: 'Support ↔ Admin Chat', icon: FiMessageSquare },
     { to: '/profile', label: 'Profile', icon: FiUser },
   ],
   ADMIN: [
     { to: '/dashboard', label: 'Dashboard', icon: FiHome },
     { to: '/documents/upload', label: 'Upload Document', icon: FiUploadCloud },
     { to: '/documents/my-uploads', label: 'My Uploads', icon: FiGrid },
+    { to: '/chats/support-admin', label: 'Support ↔ Admin Chat', icon: FiMessageSquare },
+    { to: '/chats/admin-super-admin', label: 'Admin Chat', icon: FiMessageSquare },
     { to: '/profile', label: 'Profile', icon: FiUser },
   ],
   SUPER_ADMIN: [
@@ -51,6 +54,8 @@ const navByRole = {
     { to: '/tickets/completed', label: 'Completed Tickets', icon: FiMessageSquare },
     { to: '/activities', label: 'Activity Dashboard', icon: FiBarChart2 },
     { to: '/activities/stats', label: 'Activity Statistics', icon: FiTrendingUp },
+    { to: '/chats/support-admin', label: 'Support ↔ Admin Chat', icon: FiMessageSquare },
+    { to: '/chats/admin-super-admin', label: 'Admin Chat', icon: FiMessageSquare },
     { to: '/profile', label: 'Profile', icon: FiUser },
   ],
 };

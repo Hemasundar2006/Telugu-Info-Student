@@ -23,6 +23,9 @@ import CreateTicket from '../pages/Tickets/CreateTicket';
 import MyTickets from '../pages/Tickets/MyTickets';
 import SupportTickets from '../pages/Tickets/SupportTickets';
 import CompletedTickets from '../pages/Tickets/CompletedTickets';
+import TicketChat from '../pages/Tickets/TicketChat';
+import SupportAdminChat from '../pages/Chats/SupportAdminChat';
+import AdminSuperAdminChat from '../pages/Chats/AdminSuperAdminChat';
 import ActivityDashboard from '../pages/Activities/ActivityDashboard';
 import ActivityStats from '../pages/Activities/ActivityStats';
 import UserActivities from '../pages/Activities/UserActivities';
@@ -114,6 +117,31 @@ export default function AppRoutes() {
         <Route path="/tickets" element={<ProtectedRoute allowedRoles={['USER']}><Layout><MyTickets /></Layout></ProtectedRoute>} />
         <Route path="/tickets/support" element={<ProtectedRoute allowedRoles={['SUPPORT']}><Layout><SupportTickets /></Layout></ProtectedRoute>} />
         <Route path="/tickets/completed" element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']}><Layout><CompletedTickets /></Layout></ProtectedRoute>} />
+        <Route
+          path="/tickets/:ticketId/chat"
+          element={
+            <ProtectedRoute allowedRoles={['USER', 'SUPPORT', 'ADMIN', 'SUPER_ADMIN']}>
+              <Layout><TicketChat /></Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/chats/support-admin"
+          element={
+            <ProtectedRoute allowedRoles={['SUPPORT', 'ADMIN', 'SUPER_ADMIN']}>
+              <Layout><SupportAdminChat /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chats/admin-super-admin"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}>
+              <Layout><AdminSuperAdminChat /></Layout>
+            </ProtectedRoute>
+          }
+        />
 
         <Route path="/activities" element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']}><Layout><ActivityDashboard /></Layout></ProtectedRoute>} />
         <Route path="/activities/stats" element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']}><Layout><ActivityStats /></Layout></ProtectedRoute>} />

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { getMyTickets } from '../../api/tickets';
 import { handleApiError } from '../../utils/errorHandler';
@@ -55,6 +56,11 @@ export default function MyTickets() {
               <p className="ticket-meta">
                 Created {t.createdAt ? new Date(t.createdAt).toLocaleDateString() : '–'}
               </p>
+              <div className="ticket-actions">
+                <Link to={`/tickets/${t._id}/chat`} className="btn-chat-sm">
+                  Open Chat
+                </Link>
+              </div>
             </div>
           ))}
         </div>

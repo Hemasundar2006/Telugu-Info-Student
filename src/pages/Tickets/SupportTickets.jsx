@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { getSupportTickets, assignTicket, completeTicket } from '../../api/tickets';
 import { useAuth } from '../../context/AuthContext';
@@ -131,6 +132,9 @@ export default function SupportTickets() {
                     Complete
                   </button>
                 )}
+                <Link to={`/tickets/${t._id}/chat`} className="btn-chat-sm">
+                  Open Chat
+                </Link>
               </div>
             </div>
           ))}
