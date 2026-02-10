@@ -75,6 +75,8 @@
   border: 1px solid #d1d5db;
   border-radius: 10px;
   font-size: 1rem;
+  background-color: #ffffff;
+  color: #111827; /* ensure text is visible on white */
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 

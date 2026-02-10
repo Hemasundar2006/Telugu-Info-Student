@@ -80,6 +80,8 @@
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 1rem;
+  background-color: #ffffff;
+  color: #111827; /* dark text on light auth cards */
 }
 
 .form-group input:focus,
