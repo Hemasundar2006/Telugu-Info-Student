@@ -3,6 +3,7 @@ import UserDashboard from './UserDashboard';
 import SupportDashboard from './SupportDashboard';
 import AdminDashboard from './AdminDashboard';
 import SuperAdminDashboard from './SuperAdminDashboard';
+import CompanyDashboard from './CompanyDashboard';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -11,5 +12,6 @@ export default function Dashboard() {
   if (role === 'SUPER_ADMIN') return <SuperAdminDashboard />;
   if (role === 'SUPPORT') return <SupportDashboard />;
   if (role === 'ADMIN') return <AdminDashboard />;
+  if (role === 'COMPANY') return <CompanyDashboard />;
   return <UserDashboard />;
 }

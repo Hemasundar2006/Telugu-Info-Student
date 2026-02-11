@@ -1,4 +1,4 @@
-export const ROLES = ['USER', 'SUPPORT', 'ADMIN', 'SUPER_ADMIN'];
+export const ROLES = ['USER', 'COMPANY', 'SUPPORT', 'ADMIN', 'SUPER_ADMIN'];
 export const STATES = ['AP', 'TS'];
 export const TIERS = ['FREE', '1_RUPEE', '9_RUPEE'];
 export const DOC_TYPES = ['HALL_TICKET', 'RESULT', 'ROADMAP'];

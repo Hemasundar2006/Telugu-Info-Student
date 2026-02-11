@@ -34,6 +34,10 @@ import AiCareer from '../pages/AICareer/AiCareer';
 import Profile from '../pages/Profile';
 import Unauthorized from '../pages/Unauthorized';
 import ForgotPassword from '../pages/ForgotPassword';
+import CompanyRegister from '../pages/Company/CompanyRegister';
+import CompanyLogin from '../pages/Company/CompanyLogin';
+import CompanyProfile from '../pages/Company/CompanyProfile';
+import CompanyVerification from '../pages/Company/CompanyVerification';
 
 import { useAuth } from '../context/AuthContext';
 
@@ -84,6 +88,26 @@ export default function AppRoutes() {
         <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
         <Route path="/login" element={<AuthRedirect><PublicLayout><Login /></PublicLayout></AuthRedirect>} />
         <Route path="/register" element={<AuthRedirect><PublicLayout><Register /></PublicLayout></AuthRedirect>} />
+        <Route
+          path="/company/login"
+          element={
+            <AuthRedirect>
+              <PublicLayout>
+                <CompanyLogin />
+              </PublicLayout>
+            </AuthRedirect>
+          }
+        />
+        <Route
+          path="/company/register"
+          element={
+            <AuthRedirect>
+              <PublicLayout>
+                <CompanyRegister />
+              </PublicLayout>
+            </AuthRedirect>
+          }
+        />
         <Route path="/forgot-password" element={<PublicLayout><ForgotPassword /></PublicLayout>} />
         <Route path="/unauthorized" element={<PublicLayout><Unauthorized /></PublicLayout>} />
 
@@ -92,6 +116,22 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
               <Layout><Dashboard /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/company/profile"
+          element={
+            <ProtectedRoute allowedRoles={['COMPANY']}>
+              <Layout><CompanyProfile /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/companies"
+          element={
+            <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
+              <Layout><CompanyVerification /></Layout>
             </ProtectedRoute>
           }
         />

@@ -1,0 +1,22 @@
+import api from './config';
+
+// Company management API wrappers, matching the provided backend contracts.
+
+// Recruiter: get own company profile (linked via userId)
+export const getMyCompanyProfile = () => api.get('/companies/me');
+
+export const registerCompany = (payload) =>
+  api.post('/companies/register', payload);
+
+export const getCompanyProfile = (companyId) =>
+  api.get(`/companies/${companyId}`);
+
+export const updateCompanyProfile = (companyId, payload) =>
+  api.put(`/companies/${companyId}`, payload);
+
+export const verifyCompany = (companyId, payload) =>
+  api.post(`/companies/${companyId}/verify`, payload);
+
+export const searchCompanies = (params) =>
+  api.get('/companies/search', { params });
+

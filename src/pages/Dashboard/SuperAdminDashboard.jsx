@@ -77,6 +77,11 @@ export default function SuperAdminDashboard() {
           <h3>Activity Statistics</h3>
           <p>Charts by role, action, resource</p>
         </Link>
+        <Link to="/admin/companies" className="dashboard-card">
+          <FiBarChart2 size={32} />
+          <h3>Company Verification</h3>
+          <p>Approve or reject recruiter/company accounts</p>
+        </Link>
       </div>
     </div>
   );

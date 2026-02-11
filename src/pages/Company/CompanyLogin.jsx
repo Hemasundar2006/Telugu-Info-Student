@@ -5,21 +5,20 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
-import { useAuth } from '../context/AuthContext';
-import { login } from '../api/auth';
-import { handleApiError } from '../utils/errorHandler';
+import { useAuth } from '../../context/AuthContext';
+import { login } from '../../api/auth';
+import { handleApiError } from '../../utils/errorHandler';
 
 const schema = yup.object({
-  email: yup.string().email('Invalid email').required('Email is required'),
+  email: yup.string().email('Invalid email').required('Company email is required'),
   password: yup.string().min(6, 'Min 6 characters').required('Password is required'),
 });
 
-export default function Login() {
+export default function CompanyLogin() {
   const navigate = useNavigate();
   const location = useLocation();
   const { login: setAuth } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [mode, setMode] = useState('student'); // 'student' | 'company'
   const from = location.state?.from?.pathname || '/dashboard';
 
   const { register, handleSubmit, formState } = useForm({
@@ -32,16 +31,10 @@ export default function Login() {
       const res = await login({ email: data.email, password: data.password });
       if (res.success && res.token) {
         const user = res.user || res;
-        const userRole = user.role || user.role;
         
-        // Validate role matches login mode
-        if (mode === 'company' && userRole !== 'COMPANY') {
-          toast.error('This email is not registered as a company account. Please use student login or create a company account.');
-          return;
-        }
-        
-        if (mode === 'student' && userRole === 'COMPANY') {
-          toast.error('This is a company account. Please use company login.');
+        // Check if logged-in user has COMPANY role
+        if (user.role !== 'COMPANY') {
+          toast.error('This login is for recruiter/company accounts only. Please use the student login.');
           return;
         }
         
@@ -55,8 +48,6 @@ export default function Login() {
       toast.error(handleApiError(err));
     }
   };
-  
-  const isStudent = mode === 'student';
 
   return (
     <div className="min-h-[70vh] grid grid-cols-1 lg:grid-cols-2">
@@ -64,54 +55,27 @@ export default function Login() {
         <div className="w-full max-w-md space-y-6">
           <div>
             <p className="text-xs font-semibold tracking-wide text-primary uppercase mb-1">
-              {isStudent ? 'Student login' : 'Company / Recruiter login'}
+              Company / Recruiter login
             </p>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
-              {isStudent ? 'Sign in to Telugu Info' : 'Sign in to recruiter portal'}
+              Sign in to your recruiter account
             </h1>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              {isStudent
-                ? 'Continue to your dashboard and career tools.'
-                : 'Access your company dashboard, manage jobs, and hire students.'}
+              Access your company dashboard, manage jobs, and hire students.
             </p>
-          </div>
-
-          <div className="inline-flex rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 p-1 text-xs font-medium">
-            <button
-              type="button"
-              onClick={() => setMode('student')}
-              className={`px-3 py-1 rounded-full transition ${
-                isStudent
-                  ? 'bg-primary text-white'
-                  : 'text-slate-600 dark:text-slate-300'
-              }`}
-            >
-              Student
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode('company')}
-              className={`px-3 py-1 rounded-full transition ${
-                !isStudent
-                  ? 'bg-primary text-white'
-                  : 'text-slate-600 dark:text-slate-300'
-              }`}
-            >
-              Recruiter / Company
-            </button>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                {isStudent ? 'Email' : 'Company email *'}
+                Company email *
               </label>
               <div className="relative">
                 <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <input
                   type="email"
                   {...register('email')}
-                  placeholder={isStudent ? 'you@example.com' : 'hr@company.com'}
+                  placeholder="hr@company.com"
                   autoComplete="email"
                   className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 />
@@ -125,7 +89,7 @@ export default function Login() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                {isStudent ? 'Password' : 'Password *'}
+                Password *
               </label>
               <div className="relative">
                 <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
@@ -154,9 +118,7 @@ export default function Login() {
 
             <div className="flex items-center justify-between text-xs">
               <span className="text-slate-500 dark:text-slate-400">
-                {isStudent
-                  ? 'Use the email and password you registered with.'
-                  : 'Use the company email and password you registered with.'}
+                Use the company email and password you registered with.
               </span>
               <Link
                 to="/forgot-password"
@@ -171,11 +133,7 @@ export default function Login() {
               className="w-full inline-flex items-center justify-center rounded-lg bg-primary text-white px-4 py-2.5 text-sm font-semibold hover:bg-primary-dark disabled:opacity-60 disabled:cursor-not-allowed transition"
               disabled={formState.isSubmitting}
             >
-              {formState.isSubmitting
-                ? 'Signing in...'
-                : isStudent
-                ? 'Login'
-                : 'Login as recruiter'}
+              {formState.isSubmitting ? 'Signing in...' : 'Login as recruiter'}
             </button>
           </form>
 
@@ -187,22 +145,17 @@ export default function Login() {
 
           <div className="space-y-2">
             <p className="text-sm text-center text-slate-600 dark:text-slate-400">
-              Don&apos;t have an account?{' '}
+              Don&apos;t have a recruiter account?{' '}
               <Link to="/register" className="font-semibold text-primary hover:text-primary-dark">
-                {isStudent ? 'Create account' : 'Create company account'}
+                Create company account
               </Link>
             </p>
-            {isStudent && (
-              <p className="text-xs text-center text-slate-500 dark:text-slate-400">
-                Are you a recruiter?{' '}
-                <Link
-                  to="/company/login"
-                  className="font-semibold text-primary hover:text-primary-dark"
-                >
-                  Company login
-                </Link>
-              </p>
-            )}
+            <p className="text-xs text-center text-slate-500 dark:text-slate-400">
+              Are you a student?{' '}
+              <Link to="/login" className="font-semibold text-primary hover:text-primary-dark">
+                Student login
+              </Link>
+            </p>
           </div>
         </div>
       </div>
@@ -216,7 +169,7 @@ export default function Login() {
           />
           <h2 className="text-2xl font-bold tracking-tight">తెలుగు InfQ</h2>
           <p className="text-sm text-slate-200">
-            One login for documents, tickets, AI career guidance, and more.
+            Recruiter portal — post jobs, manage applications, and hire Telugu Info students.
           </p>
         </div>
       </div>
