@@ -16,12 +16,16 @@ import {
   FiUser,
   FiGrid,
   FiX,
+  FiBriefcase,
+  FiBell,
 } from 'react-icons/fi';
 import './Layout.css';
 
 const navByRole = {
   USER: [
     { to: '/dashboard', label: 'Dashboard', icon: FiHome },
+    { to: '/student/notifications', label: 'Job Notifications', icon: FiBell },
+    { to: '/student/jobs', label: 'Job Listings', icon: FiBriefcase },
     { to: '/documents/hall-tickets', label: 'Hall Tickets', icon: FiFileText },
     { to: '/documents/results', label: 'Results', icon: FiAward },
     { to: '/documents/roadmaps', label: 'AI Roadmaps', icon: FiMap },
@@ -41,6 +45,7 @@ const navByRole = {
   ],
   ADMIN: [
     { to: '/dashboard', label: 'Dashboard', icon: FiHome },
+    { to: '/admin/jobs', label: 'Job Postings', icon: FiBriefcase },
     { to: '/documents/upload', label: 'Upload Document', icon: FiUploadCloud },
     { to: '/documents/my-uploads', label: 'My Uploads', icon: FiGrid },
     { to: '/chats/support-admin', label: 'Support ↔ Admin Chat', icon: FiMessageSquare },
@@ -49,6 +54,7 @@ const navByRole = {
   ],
   SUPER_ADMIN: [
     { to: '/dashboard', label: 'Dashboard', icon: FiHome },
+    { to: '/admin/jobs', label: 'Job Postings', icon: FiBriefcase },
     { to: '/documents/pending', label: 'Pending Documents', icon: FiClock },
     { to: '/documents/approve', label: 'Approve Documents', icon: FiCheckCircle },
     { to: '/tickets/completed', label: 'Completed Tickets', icon: FiMessageSquare },

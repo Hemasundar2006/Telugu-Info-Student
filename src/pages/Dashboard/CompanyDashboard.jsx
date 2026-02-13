@@ -91,10 +91,9 @@ export default function CompanyDashboard() {
           <h3>Company Profile</h3>
           <p>View verification status and update public company details.</p>
         </Link>
-        {/* Placeholders for future job management pages */}
         <div className="dashboard-card dashboard-card-disabled">
-          <h3>Jobs (coming soon)</h3>
-          <p>Create and manage job postings for students.</p>
+          <h3>Job postings</h3>
+          <p>Job posting is managed by Admins. Contact support to post jobs for students.</p>
         </div>
         <div className="dashboard-card dashboard-card-disabled">
           <h3>Applications (coming soon)</h3>

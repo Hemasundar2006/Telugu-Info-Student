@@ -38,6 +38,11 @@ import CompanyRegister from '../pages/Company/CompanyRegister';
 import CompanyLogin from '../pages/Company/CompanyLogin';
 import CompanyProfile from '../pages/Company/CompanyProfile';
 import CompanyVerification from '../pages/Company/CompanyVerification';
+import AdminJobList from '../pages/Jobs/AdminJobList';
+import CreateEditJob from '../pages/Jobs/CreateEditJob';
+import AdminJobDetail from '../pages/Jobs/AdminJobDetail';
+import StudentNotifications from '../pages/Student/StudentNotifications';
+import StudentJobListings from '../pages/Student/StudentJobListings';
 
 import { useAuth } from '../context/AuthContext';
 
@@ -132,6 +137,54 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
               <Layout><CompanyVerification /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/jobs"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}>
+              <Layout><AdminJobList /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/jobs/new"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}>
+              <Layout><CreateEditJob /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/jobs/:jobId"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}>
+              <Layout><AdminJobDetail /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/jobs/:jobId/edit"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'SUPER_ADMIN']}>
+              <Layout><CreateEditJob /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/notifications"
+          element={
+            <ProtectedRoute allowedRoles={['USER']}>
+              <Layout><StudentNotifications /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/jobs"
+          element={
+            <ProtectedRoute allowedRoles={['USER']}>
+              <Layout><StudentJobListings /></Layout>
             </ProtectedRoute>
           }
         />
