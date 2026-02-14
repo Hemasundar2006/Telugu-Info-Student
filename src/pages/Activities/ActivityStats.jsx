@@ -17,7 +17,7 @@ import {
 import { format } from 'date-fns';
 import './Activities.css';
 
-const COLORS = ['#ea580c', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+const COLORS = ['#ea580c', '#0F766E', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
 
 export default function ActivityStats() {
   const [stats, setStats] = useState(null);

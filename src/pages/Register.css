@@ -1,0 +1,253 @@
+/* Create Account (Register) — teal/light redesign, same fields */
+
+.register-page {
+  min-height: 70vh;
+  display: grid;
+  grid-template-columns: 1fr;
+  background: #F8FAFC;
+}
+
+@media (min-width: 1024px) {
+  .register-page {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.register-form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem 3rem;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.register-form-inner {
+  width: 100%;
+  max-width: 420px;
+}
+
+.register-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #0F766E;
+  margin-bottom: 0.35rem;
+}
+
+.register-title {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0 0 0.35rem;
+}
+
+.register-subtitle {
+  font-size: 0.9375rem;
+  color: #4B5563;
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+}
+
+.register-toggle-wrap {
+  display: inline-flex;
+  border-radius: 9999px;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  padding: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.register-toggle-btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748B;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.register-toggle-btn:hover {
+  color: #1F2937;
+}
+
+.register-toggle-btn.active {
+  background: #0F766E;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.35);
+}
+
+.register-toggle-btn:focus-visible {
+  outline: 2px solid #0F766E;
+  outline-offset: 2px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.register-field label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 0.35rem;
+}
+
+.register-field input,
+.register-field select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.9375rem;
+  color: #1F2937;
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.register-field input::placeholder,
+.register-field select option {
+  color: #94A3B8;
+}
+
+.register-field input:focus,
+.register-field select:focus {
+  outline: none;
+  border-color: #0F766E;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+.register-field .error {
+  font-size: 0.8125rem;
+  color: #DC2626;
+  margin-top: 0.25rem;
+}
+
+.register-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 480px) {
+  .register-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.register-submit {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: #0F766E;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 0.25rem;
+}
+
+.register-submit:hover:not(:disabled) {
+  background: #0D5C56;
+  box-shadow: 0 4px 14px rgba(15, 118, 110, 0.35);
+}
+
+.register-submit:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.register-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.register-submit:focus-visible {
+  outline: 2px solid #0F766E;
+  outline-offset: 2px;
+}
+
+.register-note {
+  font-size: 0.6875rem;
+  color: #64748B;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+.register-note strong {
+  color: #475569;
+}
+
+.register-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.register-footer p {
+  font-size: 0.9375rem;
+  color: #4B5563;
+  margin: 0;
+}
+
+.register-footer a {
+  font-weight: 600;
+  color: #0F766E;
+  text-decoration: none;
+}
+
+.register-footer a:hover {
+  color: #0D5C56;
+  text-decoration: underline;
+}
+
+/* Right panel — teal gradient */
+.register-brand-panel {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(160deg, #0F766E 0%, #0D9488 50%, #14B8A6 100%);
+  color: #fff;
+}
+
+@media (min-width: 1024px) {
+  .register-brand-panel {
+    display: flex;
+  }
+}
+
+.register-brand-inner {
+  text-align: center;
+  max-width: 320px;
+}
+
+.register-brand-inner img {
+  margin: 0 auto 1.25rem;
+  height: 96px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+.register-brand-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+.register-brand-desc {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0;
+}

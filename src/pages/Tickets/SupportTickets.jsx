@@ -142,8 +142,8 @@ export default function SupportTickets() {
       )}
 
       {completeModal && (
-        <div className="modal-backdrop" onClick={() => setCompleteModal(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-backdrop animate-modal-backdrop" onClick={() => setCompleteModal(null)}>
+          <div className="modal-content animate-modal-in" onClick={(e) => e.stopPropagation()}>
             <h3>Complete Ticket</h3>
             <p>{completeModal.title}</p>
             <div className="form-group">

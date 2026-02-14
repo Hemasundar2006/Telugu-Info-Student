@@ -1,3 +1,5 @@
+/* Dashboard — card-based, design system tokens */
+
 .dashboard-page {
   max-width: 1200px;
   margin: 0 auto;
@@ -7,12 +9,17 @@
   margin: 0 0 0.25rem;
   font-size: 1.75rem;
   font-weight: 700;
-  color: #000000;
+  color: var(--color-primary);
+  letter-spacing: 0.02em;
+}
+
+[data-theme='dark'] .dashboard-page h1 {
+  color: var(--color-text);
 }
 
 .dashboard-subtitle {
   margin: 0 0 1.5rem;
-  color: #000;
+  color: var(--color-text-secondary);
   font-size: 0.95rem;
 }
 
@@ -24,30 +31,30 @@
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 1.25rem;
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  border-color: rgba(96, 165, 250, 0.25);
+  box-shadow: var(--shadow);
+  border-color: var(--color-secondary);
 }
 
 .stat-value {
   display: block;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #60a5fa;
+  color: var(--color-secondary);
 }
 
 .stat-label {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-text-muted);
 }
 
 .dashboard-cards {
@@ -57,28 +64,28 @@
 }
 
 .dashboard-card {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 1.5rem;
   text-decoration: none;
-  color: #e5e7eb;
+  color: var(--color-text);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .dashboard-card:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(96, 165, 250, 0.45);
+  background: var(--color-bg-elevated);
+  border-color: var(--color-secondary);
   transform: translateY(-5px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-lg);
 }
 
 .dashboard-card svg {
-  color: #60a5fa;
-  transition: transform 0.25s ease;
+  color: var(--color-secondary);
+  transition: transform 0.3s ease;
 }
 
 .dashboard-card:hover svg {
@@ -88,18 +95,53 @@
 .dashboard-card h3 {
   margin: 0;
   font-size: 1.1rem;
-  color: #000;
+  font-weight: 600;
+  color: var(--color-text);
 }
 
 .dashboard-card p {
   margin: 0;
   font-size: 0.875rem;
-  color: #000;
+  color: var(--color-text-secondary);
 }
 
 .dashboard-section-title {
   margin: 2rem 0 0.5rem;
   font-size: 1.35rem;
   font-weight: 700;
-  color: #000;
+  color: var(--color-primary);
+}
+
+[data-theme='dark'] .dashboard-section-title {
+  color: var(--color-text);
+}
+
+.dashboard-alert {
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+}
+
+.dashboard-alert-warning {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: var(--color-text);
+}
+
+.dashboard-alert-success {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: var(--color-text);
+}
+
+.dashboard-card-disabled {
+  opacity: 0.85;
+  cursor: default;
+  pointer-events: none;
+}
+
+.dashboard-card-disabled:hover {
+  transform: none;
+  border-color: var(--color-border);
 }

@@ -8,6 +8,7 @@ import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { login } from '../api/auth';
 import { handleApiError } from '../utils/errorHandler';
+import './Login.css';
 
 const schema = yup.object({
   email: yup.string().email('Invalid email').required('Email is required'),
@@ -59,86 +60,69 @@ export default function Login() {
   const isStudent = mode === 'student';
 
   return (
-    <div className="min-h-[70vh] grid grid-cols-1 lg:grid-cols-2">
-      <div className="flex items-center justify-center bg-white/95 dark:bg-slate-900/95 px-4 py-10">
-        <div className="w-full max-w-md space-y-6">
-          <div>
-            <p className="text-xs font-semibold tracking-wide text-primary uppercase mb-1">
-              {isStudent ? 'Student login' : 'Company / Recruiter login'}
-            </p>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
-              {isStudent ? 'Sign in to Telugu Info' : 'Sign in to recruiter portal'}
-            </h1>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              {isStudent
-                ? 'Continue to your dashboard and career tools.'
-                : 'Access your company dashboard, manage jobs, and hire students.'}
-            </p>
-          </div>
+    <div className="login-page">
+      <div className="login-form-panel">
+        <div className="login-form-inner">
+          <p className="login-badge">
+            {isStudent ? 'Student login' : 'Company / Recruiter login'}
+          </p>
+          <h1 className="login-title">
+            {isStudent ? 'Sign in to Telugu Info' : 'Sign in to recruiter portal'}
+          </h1>
+          <p className="login-subtitle">
+            {isStudent
+              ? 'Continue to your dashboard and career tools.'
+              : 'Access your company dashboard, manage jobs, and hire students.'}
+          </p>
 
-          <div className="inline-flex rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 p-1 text-xs font-medium">
+          <div className="login-toggle-wrap">
             <button
               type="button"
               onClick={() => setMode('student')}
-              className={`px-3 py-1 rounded-full transition ${
-                isStudent
-                  ? 'bg-primary text-white'
-                  : 'text-slate-600 dark:text-slate-300'
-              }`}
+              className={`login-toggle-btn ${isStudent ? 'active' : ''}`}
             >
               Student
             </button>
             <button
               type="button"
               onClick={() => setMode('company')}
-              className={`px-3 py-1 rounded-full transition ${
-                !isStudent
-                  ? 'bg-primary text-white'
-                  : 'text-slate-600 dark:text-slate-300'
-              }`}
+              className={`login-toggle-btn ${!isStudent ? 'active' : ''}`}
             >
               Recruiter / Company
             </button>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                {isStudent ? 'Email' : 'Company email *'}
-              </label>
-              <div className="relative">
-                <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+          <form onSubmit={handleSubmit(onSubmit)} className="login-form">
+            <div className="login-field">
+              <label>{isStudent ? 'Email' : 'Company email *'}</label>
+              <div className="login-input-wrap">
+                <FiMail className="input-icon" size={18} aria-hidden />
                 <input
                   type="email"
                   {...register('email')}
                   placeholder={isStudent ? 'you@example.com' : 'hr@company.com'}
                   autoComplete="email"
-                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 />
               </div>
               {formState.errors.email && (
-                <p className="mt-1 text-xs text-error">
-                  {formState.errors.email.message}
-                </p>
+                <p className="error">{formState.errors.email.message}</p>
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                {isStudent ? 'Password' : 'Password *'}
-              </label>
-              <div className="relative">
-                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+            <div className="login-field">
+              <label>{isStudent ? 'Password' : 'Password *'}</label>
+              <div className="login-input-wrap">
+                <FiLock className="input-icon" size={18} aria-hidden />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   {...register('password')}
                   placeholder="••••••••"
                   autoComplete="current-password"
-                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 pl-9 pr-10 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
+                  className="with-icon-right"
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-400"
+                  className="input-icon input-icon-right"
                   onClick={() => setShowPassword((s) => !s)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
@@ -146,29 +130,24 @@ export default function Login() {
                 </button>
               </div>
               {formState.errors.password && (
-                <p className="mt-1 text-xs text-error">
-                  {formState.errors.password.message}
-                </p>
+                <p className="error">{formState.errors.password.message}</p>
               )}
             </div>
 
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-500 dark:text-slate-400">
+            <div className="login-actions">
+              <span className="hint">
                 {isStudent
                   ? 'Use the email and password you registered with.'
                   : 'Use the company email and password you registered with.'}
               </span>
-              <Link
-                to="/forgot-password"
-                className="font-semibold text-primary hover:text-primary-dark"
-              >
+              <Link to="/forgot-password" className="login-forgot">
                 Forgot password?
               </Link>
             </div>
 
             <button
               type="submit"
-              className="w-full inline-flex items-center justify-center rounded-lg bg-primary text-white px-4 py-2.5 text-sm font-semibold hover:bg-primary-dark disabled:opacity-60 disabled:cursor-not-allowed transition"
+              className="login-submit"
               disabled={formState.isSubmitting}
             >
               {formState.isSubmitting
@@ -179,43 +158,31 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700" />
-            <span className="text-xs text-slate-500 dark:text-slate-400">OR</span>
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700" />
+          <div className="login-divider">
+            <span>OR</span>
           </div>
 
-          <div className="space-y-2">
-            <p className="text-sm text-center text-slate-600 dark:text-slate-400">
+          <div className="login-footer">
+            <p>
               Don&apos;t have an account?{' '}
-              <Link to="/register" className="font-semibold text-primary hover:text-primary-dark">
+              <Link to="/register">
                 {isStudent ? 'Create account' : 'Create company account'}
               </Link>
             </p>
             {isStudent && (
-              <p className="text-xs text-center text-slate-500 dark:text-slate-400">
-                Are you a recruiter?{' '}
-                <Link
-                  to="/company/login"
-                  className="font-semibold text-primary hover:text-primary-dark"
-                >
-                  Company login
-                </Link>
+              <p>
+                Are you a recruiter? <Link to="/company/login">Company login</Link>
               </p>
             )}
           </div>
         </div>
       </div>
 
-      <div className="hidden lg:flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 px-6 py-10">
-        <div className="text-center text-slate-50 space-y-3">
-          <img
-            src="/Teluguinfo logo.png"
-            alt="తెలుగు InfQ"
-            className="mx-auto mb-3 h-24 w-auto object-contain drop-shadow-lg"
-          />
-          <h2 className="text-2xl font-bold tracking-tight">తెలుగు InfQ</h2>
-          <p className="text-sm text-slate-200">
+      <div className="login-brand-panel">
+        <div className="login-brand-inner">
+          <img src="/Teluguinfo logo.png" alt="Telugu Info" />
+          <h2 className="login-brand-title">తెలుగు InfQ</h2>
+          <p className="login-brand-desc">
             One login for documents, tickets, AI career guidance, and more.
           </p>
         </div>

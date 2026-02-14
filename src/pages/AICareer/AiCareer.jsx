@@ -100,16 +100,16 @@ export default function AiCareer() {
     <div className="min-h-screen flex flex-col items-center p-4 md:p-8 relative text-[var(--text-main)]">
       {/* Background */}
       <div className="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-5%] right-[-5%] w-[40%] h-[40%] bg-blue-600/10 blur-[100px] rounded-full" />
-        <div className="absolute bottom-[-5%] left-[-5%] w-[40%] h-[40%] bg-indigo-600/10 blur-[100px] rounded-full" />
+        <div className="absolute top-[-5%] right-[-5%] w-[40%] h-[40%] bg-teal-600/10 blur-[100px] rounded-full" />
+        <div className="absolute bottom-[-5%] left-[-5%] w-[40%] h-[40%] bg-teal-700/10 blur-[100px] rounded-full" />
       </div>
 
       <header className="mb-12 text-center w-full max-w-4xl flex flex-col items-center">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/20">
+          <div className="w-12 h-12 bg-gradient-to-r from-teal-600 to-teal-700 rounded-2xl flex items-center justify-center shadow-xl shadow-teal-500/20">
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-teal-400 to-teal-500 bg-clip-text text-transparent">
             AI Career Guidance
           </h1>
         </div>
@@ -128,7 +128,7 @@ export default function AiCareer() {
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10 text-left">
                 <div className="p-5 rounded-2xl bg-slate-800/40 border border-slate-700/50">
-                  <div className="text-blue-400 font-bold mb-2">Education</div>
+                  <div className="text-teal-400 font-bold mb-2">Education</div>
                   <p className="text-xs text-slate-500">Perfect for students after 10th or 12th grade.</p>
                 </div>
                 <div className="p-5 rounded-2xl bg-slate-800/40 border border-slate-700/50">
@@ -140,7 +140,7 @@ export default function AiCareer() {
                   <p className="text-xs text-slate-500">Step-by-step guides for long-term success.</p>
                 </div>
               </div>
-              <Button onClick={handleStart} className="w-full md:w-auto mx-auto text-xl px-16 py-5 rounded-2xl shadow-2xl shadow-blue-600/20">
+              <Button onClick={handleStart} className="w-full md:w-auto mx-auto text-xl px-16 py-5 rounded-2xl shadow-2xl shadow-teal-600/20">
                 Start Consultation
               </Button>
             </div>
@@ -153,7 +153,7 @@ export default function AiCareer() {
               <div className="flex justify-between items-end mb-4">
                 <div>
                   <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-1">Consultation Progress</span>
-                  <span className="text-lg font-bold text-blue-400">Question {questionCount} of {MAX_QUESTIONS}</span>
+                  <span className="text-lg font-bold text-teal-400">Question {questionCount} of {MAX_QUESTIONS}</span>
                 </div>
                 <span className="text-xs font-bold text-slate-500">{Math.round((questionCount / MAX_QUESTIONS) * 100)}% Complete</span>
               </div>
@@ -162,7 +162,7 @@ export default function AiCareer() {
                   <div
                     key={i}
                     className={`h-2 flex-grow rounded-full transition-all duration-500 ${
-                      i + 1 < questionCount ? 'bg-blue-500' : i + 1 === questionCount ? 'bg-gradient-to-r from-blue-600 to-indigo-600 animate-pulse' : 'bg-slate-800'
+                      i + 1 < questionCount ? 'bg-teal-500' : i + 1 === questionCount ? 'bg-gradient-to-r from-teal-600 to-teal-700 animate-pulse' : 'bg-slate-800'
                     }`}
                   />
                 ))}
@@ -175,7 +175,7 @@ export default function AiCareer() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder="Type your answer here..."
-                className="w-full h-32 bg-slate-900/60 border border-slate-700/80 rounded-2xl p-6 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all resize-none text-lg"
+                className="w-full h-32 bg-slate-900/60 border border-slate-700/80 rounded-2xl p-6 text-white placeholder-slate-600 focus:outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all resize-none text-lg"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -216,20 +216,20 @@ export default function AiCareer() {
         {appState === AppState.THINKING && (
           <Card className="text-center py-24 flex flex-col items-center justify-center my-auto">
             <div className="relative w-24 h-24 mb-10">
-              <div className="absolute inset-0 border-[6px] border-blue-500/10 rounded-full" />
-              <div className="absolute inset-0 border-[6px] border-t-blue-500 rounded-full animate-spin" />
-              <div className="absolute inset-4 bg-blue-500/5 rounded-full flex items-center justify-center">
+              <div className="absolute inset-0 border-[6px] border-teal-500/10 rounded-full" />
+              <div className="absolute inset-0 border-[6px] border-t-teal-500 rounded-full animate-spin" />
+              <div className="absolute inset-4 bg-teal-500/5 rounded-full flex items-center justify-center">
                 <span className="text-2xl">🧠</span>
               </div>
             </div>
-            <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+            <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-teal-400 to-teal-500 bg-clip-text text-transparent">
               {questionCount >= MAX_QUESTIONS ? 'Creating Your Perfect Roadmap...' : 'Analyzing Your Profile...'}
             </h3>
             <p className="text-slate-400 text-lg max-w-sm">We are using your answers to find the best career steps.</p>
             <div className="flex justify-center gap-1 mt-4">
-              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce" />
-              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:0.2s]" />
-              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:0.4s]" />
+              <div className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce" />
+              <div className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce [animation-delay:0.2s]" />
+              <div className="w-1.5 h-1.5 bg-teal-500 rounded-full animate-bounce [animation-delay:0.4s]" />
             </div>
           </Card>
         )}

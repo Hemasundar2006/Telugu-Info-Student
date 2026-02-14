@@ -29,6 +29,9 @@ export default function Footer({ variant = 'public' }) {
         </div>
         <div className="footer-bottom">
           <p className="footer-copy">&copy; {new Date().getFullYear()} Telugu Info. All rights reserved.</p>
+          <p className="footer-contact">
+            Questions? <Link to="/contact">Contact us</Link> · <Link to="/about">About</Link>
+          </p>
         </div>
       </div>
     </footer>

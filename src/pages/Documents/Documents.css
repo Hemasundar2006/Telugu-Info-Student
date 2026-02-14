@@ -6,12 +6,12 @@
 .documents-page h1 {
   margin: 0 0 0.25rem;
   font-size: 1.5rem;
-  color: #fff;
+  color: #1F2937;
 }
 
 .documents-page .section-desc {
   margin: 0 0 1rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #4B5563;
   font-size: 0.95rem;
 }
 
@@ -25,15 +25,15 @@
 .search-input,
 .select-filter {
   padding: 8px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #E5E7EB;
   border-radius: 8px;
   font-size: 0.95rem;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: #fff;
+  color: #1F2937;
 }
 
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: #9CA3AF;
 }
 
 .search-input {
@@ -41,8 +41,8 @@
 }
 
 .form-card {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #fff;
+  border: 1px solid #E5E7EB;
   border-radius: 12px;
   padding: 1.5rem;
   max-width: 480px;
@@ -56,18 +56,18 @@
   margin-bottom: 4px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: #1F2937;
 }
 
 .form-card .form-group input,
 .form-card .form-group select {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #E5E7EB;
   border-radius: 8px;
   font-size: 1rem;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: #fff;
+  color: #1F2937;
 }
 
 .form-card .error {
@@ -76,28 +76,27 @@
 }
 
 .dropzone {
-  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border: 2px dashed #D1D5DB;
   border-radius: 12px;
   padding: 2rem;
   text-align: center;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.04);
+  background: #F9FAFB;
   transition: border-color 0.2s, background 0.2s;
 }
 
 .dropzone.active,
 .dropzone.has-file {
-  border-color: #60a5fa;
-  background: rgba(96, 165, 250, 0.1);
+  border-color: #0F766E;
+  background: rgba(15, 118, 110, 0.06);
 }
 
 .dropzone p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.8);
+  color: #4B5563;
   font-size: 0.95rem;
 }
 
-/* Separate sections for user documents */
 .doc-section {
   margin-bottom: 2.5rem;
 }
@@ -113,29 +112,29 @@
   margin: 0 0 1rem;
   font-size: 1.2rem;
   font-weight: 700;
-  color: #fff;
+  color: #1F2937;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .doc-section-icon {
-  color: #60a5fa;
+  color: #0F766E;
 }
 
 .doc-section-desc {
   margin: 0 0 1rem;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #4B5563;
 }
 
 .doc-section-empty {
   margin: 0;
   padding: 1.25rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: #6B7280;
   font-size: 0.95rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: #F9FAFB;
   border-radius: 10px;
-  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border: 1px dashed #E5E7EB;
 }
 
 .doc-grid {
@@ -145,8 +144,8 @@
 }
 
 .doc-card {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #fff;
+  border: 1px solid #E5E7EB;
   border-radius: 12px;
   padding: 1.25rem;
 }
@@ -154,7 +153,7 @@
 .doc-card .doc-type {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #60a5fa;
+  color: #0F766E;
   text-transform: uppercase;
 }
 
@@ -170,25 +169,25 @@
 .doc-card h3 {
   margin: 0.5rem 0;
   font-size: 1.05rem;
-  color: #fff;
+  color: #1F2937;
 }
 
 .doc-meta {
   margin: 0 0 0.75rem;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #4B5563;
 }
 
 .doc-note {
   margin: 0;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: #6B7280;
 }
 
 .doc-card .btn-secondary {
   display: inline-block;
   padding: 8px 14px;
-  background: rgba(59, 130, 246, 0.6);
+  background: #0F766E;
   color: #fff;
   border-radius: 8px;
   text-decoration: none;
@@ -199,19 +198,19 @@
 }
 
 .doc-card .btn-secondary:hover {
-  background: rgba(59, 130, 246, 0.8);
+  background: #0D5C56;
 }
 
 .documents-page .empty-state {
-  color: rgba(255, 255, 255, 0.7);
+  color: #6B7280;
   padding: 2rem;
   text-align: center;
 }
 
 .doc-table-wrap {
   overflow-x: auto;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #fff;
+  border: 1px solid #E5E7EB;
   border-radius: 12px;
 }
 
@@ -224,15 +223,15 @@
 .doc-table td {
   padding: 12px 1rem;
   text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  color: #e5e7eb;
+  border-bottom: 1px solid #E5E7EB;
+  color: #1F2937;
 }
 
 .doc-table th {
-  background: rgba(255, 255, 255, 0.08);
+  background: #F9FAFB;
   font-weight: 600;
   font-size: 0.85rem;
-  color: #fff;
+  color: #1F2937;
 }
 
 .doc-table td {
@@ -255,17 +254,17 @@
 }
 
 .btn-primary-sm {
-  background: rgba(59, 130, 246, 0.8);
+  background: #0F766E;
   color: #fff;
 }
 
 .btn-primary-sm:hover {
-  background: #3b82f6;
+  background: #0D5C56;
 }
 
 .btn-secondary-sm {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: #E5E7EB;
+  color: #1F2937;
 }
 
 .btn-danger-sm {

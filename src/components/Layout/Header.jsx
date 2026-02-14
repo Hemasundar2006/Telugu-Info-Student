@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
 import { FiMenu, FiLogOut, FiUser, FiSearch } from 'react-icons/fi';
 import './Layout.css';
 
 export default function Header({ onMenuClick }) {
   const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -37,6 +35,15 @@ export default function Header({ onMenuClick }) {
           <span className="logo-subtitle">Career Success Platform</span>
         </div>
       </Link>
+      <div className="header-search-wrap">
+        <FiSearch size={18} className="search-icon" aria-hidden />
+        <input
+          type="search"
+          placeholder="Search..."
+          aria-label="Search"
+          className="header-search-input"
+        />
+      </div>
       <nav className="app-nav">
         <Link to="/dashboard" className={navClass('/dashboard', true)}>Home</Link>
         <Link to="/documents" className={navClass('/documents', false)}>Documents</Link>
@@ -45,17 +52,6 @@ export default function Header({ onMenuClick }) {
         <Link to="/predictor" className={navClass('/predictor', true)}>Predictor</Link>
       </nav>
       <div className="header-right">
-        <button
-          type="button"
-          className="theme-toggle-btn-header"
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-        >
-          {theme === 'dark' ? '🌙' : '☀️'}
-        </button>
-        <button type="button" className="icon-btn" aria-label="Search">
-          <FiSearch size={20} />
-        </button>
         <div className="user-menu-wrap">
           <button
             type="button"

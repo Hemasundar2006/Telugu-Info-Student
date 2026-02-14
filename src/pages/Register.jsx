@@ -9,6 +9,7 @@ import { register as registerApi } from '../api/auth';
 import { getMyCompanyProfile } from '../api/companies';
 import { handleApiError } from '../utils/errorHandler';
 import { TARGET_QUALIFICATIONS } from '../utils/jobPostingConstants';
+import './Register.css';
 
 const studentSchema = yup.object({
   name: yup.string().required('Name is required'),
@@ -137,308 +138,206 @@ export default function Register() {
   const isStudent = mode === 'student';
 
   return (
-    <div className="min-h-[70vh] grid grid-cols-1 lg:grid-cols-2">
-      <div className="flex items-center justify-center bg-white/95 dark:bg-slate-900/95 px-4 py-10">
-        <div className="w-full max-w-md space-y-6">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold tracking-wide text-primary uppercase mb-1">
-                {isStudent ? 'Student sign up' : 'Recruiter / company sign up'}
-              </p>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
-                {isStudent ? 'Create your student account' : 'Create your recruiter account'}
-              </h1>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                {isStudent
-                  ? 'Access career tools, documents, and AI-powered guidance.'
-                  : 'Post jobs, manage applications, and hire Telugu Info students.'}
-              </p>
-            </div>
-          </div>
+    <div className="register-page">
+      <div className="register-form-panel">
+        <div className="register-form-inner">
+          <p className="register-badge">
+            {isStudent ? 'Student sign up' : 'Recruiter / company sign up'}
+          </p>
+          <h1 className="register-title">
+            {isStudent ? 'Create your student account' : 'Create your recruiter account'}
+          </h1>
+          <p className="register-subtitle">
+            {isStudent
+              ? 'Access career tools, documents, and AI-powered guidance.'
+              : 'Post jobs, manage applications, and hire Telugu Info students.'}
+          </p>
 
-          <div className="inline-flex rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-900/80 p-1 text-xs font-medium">
+          <div className="register-toggle-wrap">
             <button
               type="button"
               onClick={() => setMode('student')}
-              className={`px-3 py-1 rounded-full transition ${
-                isStudent
-                  ? 'bg-primary text-white'
-                  : 'text-slate-600 dark:text-slate-300'
-              }`}
+              className={`register-toggle-btn ${isStudent ? 'active' : ''}`}
             >
               Student
             </button>
             <button
               type="button"
               onClick={() => setMode('company')}
-              className={`px-3 py-1 rounded-full transition ${
-                !isStudent
-                  ? 'bg-primary text-white'
-                  : 'text-slate-600 dark:text-slate-300'
-              }`}
+              className={`register-toggle-btn ${!isStudent ? 'active' : ''}`}
             >
               Recruiter / Company
             </button>
           </div>
 
           {isStudent ? (
-            <form onSubmit={handleSubmitStudent(onSubmitStudent)} className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                  Full name *
-                </label>
-                <input
-                  {...registerStudent('name')}
-                  placeholder="Your name"
-                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
-                />
+            <form onSubmit={handleSubmitStudent(onSubmitStudent)} className="register-form">
+              <div className="register-field">
+                <label>Full name *</label>
+                <input {...registerStudent('name')} placeholder="Your name" />
                 {studentFormState.errors.name && (
-                  <p className="mt-1 text-xs text-error">
-                    {studentFormState.errors.name.message}
-                  </p>
+                  <p className="error">{studentFormState.errors.name.message}</p>
                 )}
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                    Phone *
-                  </label>
+              <div className="register-row">
+                <div className="register-field">
+                  <label>Phone *</label>
                   <input
                     {...registerStudent('phone')}
                     placeholder="10-digit mobile"
                     maxLength={10}
                     inputMode="numeric"
-                    className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
                   />
                   {studentFormState.errors.phone && (
-                    <p className="mt-1 text-xs text-error">
-                      {studentFormState.errors.phone.message}
-                    </p>
+                    <p className="error">{studentFormState.errors.phone.message}</p>
                   )}
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                    State *
-                  </label>
-                  <select
-                    {...registerStudent('state')}
-                    className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
-                  >
+                <div className="register-field">
+                  <label>State *</label>
+                  <select {...registerStudent('state')}>
                     <option value="AP">Andhra Pradesh</option>
                     <option value="TS">Telangana</option>
                   </select>
                 </div>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                  Email *
-                </label>
+              <div className="register-field">
+                <label>Email *</label>
                 <input
                   type="email"
                   {...registerStudent('email')}
                   placeholder="you@example.com"
-                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 />
                 {studentFormState.errors.email && (
-                  <p className="mt-1 text-xs text-error">
-                    {studentFormState.errors.email.message}
-                  </p>
+                  <p className="error">{studentFormState.errors.email.message}</p>
                 )}
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                  Qualification *
-                </label>
-                <select
-                  {...registerStudent('qualification')}
-                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
-                >
+              <div className="register-field">
+                <label>Qualification *</label>
+                <select {...registerStudent('qualification')}>
                   <option value="">Select qualification</option>
                   {TARGET_QUALIFICATIONS.map((q) => (
                     <option key={q} value={q}>{q}</option>
                   ))}
                 </select>
                 {studentFormState.errors.qualification && (
-                  <p className="mt-1 text-xs text-error">
-                    {studentFormState.errors.qualification.message}
-                  </p>
+                  <p className="error">{studentFormState.errors.qualification.message}</p>
                 )}
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                  Password (optional)
-                </label>
+              <div className="register-field">
+                <label>Password (optional)</label>
                 <input
                   type="password"
                   {...registerStudent('password')}
                   placeholder="Min 6 characters"
-                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 />
                 {studentFormState.errors.password && (
-                  <p className="mt-1 text-xs text-error">
-                    {studentFormState.errors.password.message}
-                  </p>
+                  <p className="error">{studentFormState.errors.password.message}</p>
                 )}
               </div>
-
               <button
                 type="submit"
-                className="w-full inline-flex items-center justify-center rounded-lg bg-primary text-white px-4 py-2.5 text-sm font-semibold hover:bg-primary-dark disabled:opacity-60 disabled:cursor-not-allowed transition"
+                className="register-submit"
                 disabled={studentFormState.isSubmitting}
               >
                 {studentFormState.isSubmitting ? 'Creating account...' : 'Create student account'}
               </button>
             </form>
           ) : (
-            <form onSubmit={handleSubmitRecruiter(onSubmitRecruiter)} className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                  Recruiter name *
-                </label>
-                <input
-                  {...registerRecruiter('name')}
-                  placeholder="Your name"
-                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
-                />
+            <form onSubmit={handleSubmitRecruiter(onSubmitRecruiter)} className="register-form">
+              <div className="register-field">
+                <label>Recruiter name *</label>
+                <input {...registerRecruiter('name')} placeholder="Your name" />
                 {recruiterFormState.errors.name && (
-                  <p className="mt-1 text-xs text-error">
-                    {recruiterFormState.errors.name.message}
-                  </p>
+                  <p className="error">{recruiterFormState.errors.name.message}</p>
                 )}
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                  Company name *
-                </label>
+              <div className="register-field">
+                <label>Company name *</label>
                 <input
                   {...registerRecruiter('companyName')}
                   placeholder="Awesome Company Pvt Ltd"
-                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 />
                 {recruiterFormState.errors.companyName && (
-                  <p className="mt-1 text-xs text-error">
-                    {recruiterFormState.errors.companyName.message}
-                  </p>
+                  <p className="error">{recruiterFormState.errors.companyName.message}</p>
                 )}
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                    Mobile number *
-                  </label>
+              <div className="register-row">
+                <div className="register-field">
+                  <label>Mobile number *</label>
                   <input
                     {...registerRecruiter('phone')}
                     placeholder="10-digit mobile"
                     maxLength={10}
                     inputMode="numeric"
-                    className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
                   />
                   {recruiterFormState.errors.phone && (
-                    <p className="mt-1 text-xs text-error">
-                      {recruiterFormState.errors.phone.message}
-                    </p>
+                    <p className="error">{recruiterFormState.errors.phone.message}</p>
                   )}
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                    State *
-                  </label>
-                  <select
-                    {...registerRecruiter('state')}
-                    className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
-                  >
+                <div className="register-field">
+                  <label>State *</label>
+                  <select {...registerRecruiter('state')}>
                     <option value="AP">Andhra Pradesh</option>
                     <option value="TS">Telangana</option>
                   </select>
                   {recruiterFormState.errors.state && (
-                    <p className="mt-1 text-xs text-error">
-                      {recruiterFormState.errors.state.message}
-                    </p>
+                    <p className="error">{recruiterFormState.errors.state.message}</p>
                   )}
                 </div>
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                  Company mail *
-                </label>
+              <div className="register-field">
+                <label>Company mail *</label>
                 <input
                   type="email"
                   {...registerRecruiter('email')}
                   placeholder="hr@company.com"
-                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 />
                 {recruiterFormState.errors.email && (
-                  <p className="mt-1 text-xs text-error">
-                    {recruiterFormState.errors.email.message}
-                  </p>
+                  <p className="error">{recruiterFormState.errors.email.message}</p>
                 )}
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                  Password *
-                </label>
+              <div className="register-field">
+                <label>Password *</label>
                 <input
                   type="password"
                   {...registerRecruiter('password')}
                   placeholder="Min 6 characters"
-                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 />
                 {recruiterFormState.errors.password && (
-                  <p className="mt-1 text-xs text-error">
-                    {recruiterFormState.errors.password.message}
-                  </p>
+                  <p className="error">{recruiterFormState.errors.password.message}</p>
                 )}
               </div>
-
               <button
                 type="submit"
-                className="w-full inline-flex items-center justify-center rounded-lg bg-primary text-white px-4 py-2.5 text-sm font-semibold hover:bg-primary-dark disabled:opacity-60 disabled:cursor-not-allowed transition"
+                className="register-submit"
                 disabled={recruiterFormState.isSubmitting}
               >
                 {recruiterFormState.isSubmitting
                   ? 'Creating recruiter account...'
                   : 'Create recruiter account'}
               </button>
-
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                We will create a recruiter user with role <span className="font-semibold">COMPANY</span>{' '}
-                and a linked company record in pending verification state.
+              <p className="register-note">
+                We will create a recruiter user with role <strong>COMPANY</strong> and a linked
+                company record in pending verification state.
               </p>
             </form>
           )}
 
-          <div className="space-y-4">
-            <p className="text-sm text-center text-slate-600 dark:text-slate-400">
-              Already have an account?{' '}
-              <Link to="/login" className="font-semibold text-primary hover:text-primary-dark">
-                Login
-              </Link>
+          <div className="register-footer">
+            <p>
+              Already have an account? <Link to="/login">Login</Link>
             </p>
           </div>
         </div>
       </div>
 
-      <div className="hidden lg:flex items-center justify-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 px-6 py-10">
-        <div className="text-center text-slate-50 space-y-3">
-          <img
-            src="/Teluguinfo logo.png"
-            alt="తెలుగు InfQ"
-            className="mx-auto mb-3 h-24 w-auto object-contain drop-shadow-lg"
-          />
-          <h2 className="text-2xl font-bold tracking-tight">తెలుగు InfQ</h2>
-          <p className="text-sm text-slate-200">
-            Career Success Platform for students and recruiters — documents, jobs, and AI support in
-            one place.
+      <div className="register-brand-panel">
+        <div className="register-brand-inner">
+          <img src="/Teluguinfo logo.png" alt="Telugu Info" />
+          <h2 className="register-brand-title">తెలుగు InfQ</h2>
+          <p className="register-brand-desc">
+            Career Success Platform for students and recruiters — documents, jobs, and AI support
+            in one place.
           </p>
         </div>
       </div>

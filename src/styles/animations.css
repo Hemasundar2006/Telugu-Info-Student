@@ -1,0 +1,323 @@
+/**
+ * Telugu Info Student — Animation keyframes and utility classes.
+ * Uses transform/opacity for performance. Respects prefers-reduced-motion.
+ */
+
+/* ========== CSS Custom Properties ========== */
+:root {
+  --anim-duration-fast: 200ms;
+  --anim-duration-normal: 300ms;
+  --anim-duration-slow: 400ms;
+  --anim-duration-page: 600ms;
+  --anim-ease-out: ease-out;
+  --anim-ease-in-out: ease-in-out;
+  --anim-ease-in: ease-in;
+  --anim-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ========== Reduced Motion ========== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========== Keyframes ========== */
+@keyframes animFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes animFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes animFadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes animSlideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes animBounceIn {
+  0% { opacity: 0; transform: scale(0.8); }
+  60% { transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes animZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes animGradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes animShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes animPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes animUnderlineGrow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* ========== Page load / initial ========== */
+.animate-page-fade-in {
+  animation: animFadeIn 0.4s var(--anim-ease-out) forwards;
+}
+
+.animate-header-in {
+  animation: animFadeInDown 0.6s var(--anim-ease-out) forwards;
+}
+
+.animate-nav-stagger > * {
+  opacity: 0;
+  animation: animFadeInDown 0.4s var(--anim-ease-out) forwards;
+}
+
+.animate-nav-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.animate-nav-stagger > *:nth-child(2) { animation-delay: 0.1s; }
+.animate-nav-stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.animate-nav-stagger > *:nth-child(4) { animation-delay: 0.2s; }
+.animate-nav-stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.animate-nav-stagger > *:nth-child(6) { animation-delay: 0.3s; }
+.animate-nav-stagger > *:nth-child(7) { animation-delay: 0.35s; }
+.animate-nav-stagger > *:nth-child(8) { animation-delay: 0.4s; }
+.animate-nav-stagger > *:nth-child(9) { animation-delay: 0.45s; }
+.animate-nav-stagger > *:nth-child(10) { animation-delay: 0.5s; }
+.animate-nav-stagger > *:nth-child(11) { animation-delay: 0.55s; }
+
+.animate-main-in {
+  animation: animFadeIn 0.5s var(--anim-ease-out) 0.3s both;
+}
+
+.animate-hero-title {
+  animation: animFadeInUp 0.8s var(--anim-ease-out) forwards;
+}
+
+.animate-hero-subtitle {
+  animation: animFadeInUp 0.6s var(--anim-ease-out) 0.2s both;
+}
+
+.animate-hero-cta {
+  animation: animBounceIn 0.5s var(--anim-bounce) 0.4s both;
+}
+
+.animate-hero-visual {
+  animation: animZoomIn 1s var(--anim-ease-out) 0.35s both;
+}
+
+/* ========== Scroll-triggered (add .is-visible via JS) ========== */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.5s var(--anim-ease-out), transform 0.5s var(--anim-ease-out);
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animate-on-scroll-delay-1.is-visible { transition-delay: 0.05s; }
+.animate-on-scroll-delay-2.is-visible { transition-delay: 0.1s; }
+.animate-on-scroll-delay-3.is-visible { transition-delay: 0.15s; }
+.animate-on-scroll-delay-4.is-visible { transition-delay: 0.2s; }
+.animate-on-scroll-delay-5.is-visible { transition-delay: 0.25s; }
+.animate-on-scroll-delay-6.is-visible { transition-delay: 0.3s; }
+
+/* ========== Buttons ========== */
+.animate-btn {
+  transition: transform var(--anim-duration-fast) var(--anim-ease-out),
+    box-shadow var(--anim-duration-normal) var(--anim-ease-out),
+    background-color var(--anim-duration-fast),
+    color var(--anim-duration-fast);
+}
+
+.animate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.animate-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+  transition-duration: 100ms;
+}
+
+/* ========== Cards ========== */
+.animate-card {
+  transition: transform var(--anim-duration-normal) var(--anim-ease-out),
+    box-shadow var(--anim-duration-normal) var(--anim-ease-out),
+    border-color var(--anim-duration-normal);
+}
+
+.animate-card:hover {
+  transform: translateY(-4px);
+}
+
+.animate-card:active {
+  transform: translateY(-2px) scale(0.99);
+  transition-duration: 100ms;
+}
+
+.animate-card-image {
+  transition: transform var(--anim-duration-normal) var(--anim-ease-out);
+}
+
+.animate-card:hover .animate-card-image {
+  transform: scale(1.05);
+}
+
+/* ========== Links ========== */
+.animate-link {
+  position: relative;
+  transition: color var(--anim-duration-fast);
+}
+
+.animate-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--anim-duration-normal) var(--anim-ease-out);
+}
+
+.animate-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* ========== Nav active underline ========== */
+.nav-link-active-underline {
+  position: relative;
+}
+
+.nav-link-active-underline.active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 80%;
+  height: 2px;
+  background: currentColor;
+  transform: translateX(-50%) scaleX(1);
+  transition: transform 300ms var(--anim-ease-out);
+}
+
+.nav-link-active-underline::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 80%;
+  height: 2px;
+  background: currentColor;
+  transform: translateX(-50%) scaleX(0);
+  transition: transform 300ms var(--anim-ease-out);
+}
+
+.nav-link-active-underline:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* ========== Modal ========== */
+.animate-modal-backdrop {
+  animation: animFadeIn 0.2s var(--anim-ease-out) forwards;
+}
+
+.animate-modal-in {
+  animation: animZoomIn 0.3s var(--anim-ease-out) forwards;
+}
+
+/* ========== Form error shake ========== */
+.animate-shake {
+  animation: animShake 0.4s var(--anim-ease-out);
+}
+
+/* ========== Toast (react-hot-toast overrides via class) ========== */
+.toast-enter {
+  animation: animSlideInRight 0.3s var(--anim-ease-out) forwards;
+}
+
+.toast-exit {
+  animation: animSlideInRight 0.3s var(--anim-ease-in) reverse forwards;
+}
+
+/* ========== Scroll to top button ========== */
+.scroll-to-top {
+  position: fixed;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  right: max(24px, env(safe-area-inset-right));
+  z-index: 50;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: #0F766E;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(15, 118, 110, 0.4);
+  transition: transform var(--anim-duration-fast), box-shadow var(--anim-duration-fast), opacity var(--anim-duration-slow);
+  animation: animFadeIn 0.3s var(--anim-ease-out) forwards;
+}
+
+.scroll-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(15, 118, 110, 0.45);
+}
+
+.scroll-to-top:active {
+  transform: translateY(-1px);
+}
