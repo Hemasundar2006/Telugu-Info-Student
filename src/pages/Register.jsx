@@ -8,19 +8,30 @@ import { useAuth } from '../context/AuthContext';
 import { register as registerApi } from '../api/auth';
 import { getMyCompanyProfile } from '../api/companies';
 import { handleApiError } from '../utils/errorHandler';
+import { TARGET_QUALIFICATIONS } from '../utils/jobPostingConstants';
 
 const studentSchema = yup.object({
   name: yup.string().required('Name is required'),
-  phone: yup.string().required('Phone is required'),
+  email: yup.string().email('Invalid email').required('Email is required for student account'),
+  phone: yup
+    .string()
+    .required('Phone is required')
+    .matches(/^\d{10}$/, 'Phone must be exactly 10 digits'),
   state: yup.string().oneOf(['AP', 'TS']).required('State is required'),
-  email: yup.string().email('Invalid email').optional(),
+  qualification: yup
+    .string()
+    .oneOf(TARGET_QUALIFICATIONS, 'Select a valid qualification')
+    .required('Qualification is required'),
   password: yup.string().min(6, 'Min 6 characters').optional(),
 });
 
 const recruiterSchema = yup.object({
   name: yup.string().required('Recruiter name is required'),
   companyName: yup.string().required('Company name is required'),
-  phone: yup.string().required('Mobile number is required'),
+  phone: yup
+    .string()
+    .required('Mobile number is required')
+    .matches(/^\d{10}$/, 'Phone must be exactly 10 digits'),
   state: yup.string().oneOf(['AP', 'TS']).required('State is required'),
   email: yup
     .string()
@@ -43,7 +54,7 @@ export default function Register() {
     formState: studentFormState,
   } = useForm({
     resolver: yupResolver(studentSchema),
-    defaultValues: { name: '', phone: '', state: 'AP', email: '', password: '' },
+    defaultValues: { name: '', phone: '', state: 'AP', email: '', qualification: '', password: '' },
   });
 
   const {
@@ -66,11 +77,12 @@ export default function Register() {
     try {
       const payload = {
         name: data.name,
-        phone: data.phone,
+        email: data.email,
+        phone: data.phone.replace(/\D/g, '').slice(0, 10),
         state: data.state,
+        qualification: data.qualification,
         role: 'USER',
       };
-      if (data.email) payload.email = data.email;
       if (data.password) payload.password = data.password;
 
       const res = await registerApi(payload);
@@ -91,7 +103,7 @@ export default function Register() {
       const payload = {
         name: data.name,
         companyName: data.companyName,
-        phone: data.phone,
+        phone: data.phone.replace(/\D/g, '').slice(0, 10),
         state: data.state || 'AP',
         role: 'COMPANY',
         email: data.email,
@@ -195,6 +207,8 @@ export default function Register() {
                   <input
                     {...registerStudent('phone')}
                     placeholder="10-digit mobile"
+                    maxLength={10}
+                    inputMode="numeric"
                     className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
                   />
                   {studentFormState.errors.phone && (
@@ -220,7 +234,7 @@ export default function Register() {
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
-                  Email (optional)
+                  Email *
                 </label>
                 <input
                   type="email"
@@ -231,6 +245,26 @@ export default function Register() {
                 {studentFormState.errors.email && (
                   <p className="mt-1 text-xs text-error">
                     {studentFormState.errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
+                  Qualification *
+                </label>
+                <select
+                  {...registerStudent('qualification')}
+                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
+                >
+                  <option value="">Select qualification</option>
+                  {TARGET_QUALIFICATIONS.map((q) => (
+                    <option key={q} value={q}>{q}</option>
+                  ))}
+                </select>
+                {studentFormState.errors.qualification && (
+                  <p className="mt-1 text-xs text-error">
+                    {studentFormState.errors.qualification.message}
                   </p>
                 )}
               </div>
@@ -301,7 +335,9 @@ export default function Register() {
                   </label>
                   <input
                     {...registerRecruiter('phone')}
-                    placeholder="Company mobile"
+                    placeholder="10-digit mobile"
+                    maxLength={10}
+                    inputMode="numeric"
                     className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/70"
                   />
                   {recruiterFormState.errors.phone && (
