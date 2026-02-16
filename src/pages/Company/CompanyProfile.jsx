@@ -206,7 +206,10 @@ export default function CompanyProfile() {
 
   const onSubmit = async (data) => {
     if (!company) return;
-    const isVerified = company.verificationStatus === 'VERIFIED';
+    const isVerified =
+      company.isVerified === true ||
+      company.verificationStatus === 'VERIFIED' ||
+      company.verificationStatus === 'APPROVED';
     if (!isVerified) {
       toast.error('Company not verified yet. Wait for admin approval.');
       return;
@@ -337,7 +340,10 @@ export default function CompanyProfile() {
     );
   }
 
-  const isVerified = company.verificationStatus === 'VERIFIED';
+  const isVerified =
+    company.isVerified === true ||
+    company.verificationStatus === 'VERIFIED' ||
+    company.verificationStatus === 'APPROVED';
   const completion =
     typeof company.profileCompletionPercentage === 'number'
       ? company.profileCompletionPercentage

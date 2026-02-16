@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getMyCompanyProfile } from '../../api/companies';
@@ -10,32 +10,40 @@ export default function CompanyDashboard() {
   const { user } = useAuth();
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    const load = async () => {
-      if (!user || user.role !== 'COMPANY') {
-        setLoading(false);
-        return;
+  const loadCompany = useCallback(async () => {
+    if (!user || user.role !== 'COMPANY') {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await getMyCompanyProfile();
+      if (res?.success && res.data) {
+        setCompany(res.data);
+      } else {
+        toast.error(res?.error || 'Failed to load company info');
       }
-
-      try {
-        const res = await getMyCompanyProfile();
-        if (res?.success && res.data) {
-          setCompany(res.data);
-        } else {
-          toast.error(res?.error || 'Failed to load company info');
-        }
-      } catch (err) {
-        toast.error(handleApiError(err));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    load();
+    } catch (err) {
+      toast.error(handleApiError(err));
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   }, [user]);
 
-  const status = company?.verificationStatus || 'PENDING';
+  useEffect(() => {
+    loadCompany();
+  }, [loadCompany]);
+
+  const rawStatus = company?.verificationStatus || 'PENDING';
+  const status =
+    company?.isVerified === true ||
+    rawStatus === 'VERIFIED' ||
+    rawStatus === 'APPROVED'
+      ? 'VERIFIED'
+      : rawStatus;
   const isVerified = status === 'VERIFIED';
 
   return (
@@ -61,6 +69,22 @@ export default function CompanyDashboard() {
           <span className="stat-label">Verification Status</span>
         </div>
       </div>
+
+      {user?.role === 'COMPANY' && (
+        <div className="dashboard-actions">
+          <button
+            type="button"
+            className="dashboard-refresh-button"
+            onClick={() => {
+              setRefreshing(true);
+              loadCompany();
+            }}
+            disabled={refreshing}
+          >
+            {refreshing ? 'Refreshing...' : 'Refresh status'}
+          </button>
+        </div>
+      )}
 
       {!loading && !isVerified && (
         <div className="dashboard-alert dashboard-alert-warning">

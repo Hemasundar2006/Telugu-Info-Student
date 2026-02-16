@@ -35,6 +35,10 @@ const navByRole = {
     { to: '/predictor', label: 'College Predictor', icon: FiTrendingUp },
     { to: '/profile', label: 'Profile', icon: FiUser },
   ],
+  COMPANY: [
+    { to: '/dashboard', label: 'Dashboard', icon: FiHome },
+    { to: '/company/profile', label: 'Company Profile', icon: FiUser },
+  ],
   SUPPORT: [
     { to: '/dashboard', label: 'Dashboard', icon: FiHome },
     { to: '/documents/upload', label: 'Upload Document', icon: FiUploadCloud },
