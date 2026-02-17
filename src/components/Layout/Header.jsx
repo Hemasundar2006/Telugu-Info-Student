@@ -14,7 +14,13 @@ export default function Header({ onMenuClick }) {
     `app-nav-link${exact ? pathname === path : pathname.startsWith(path) ? ' active' : ''}`;
 
   const initials = user?.name
-    ? user.name.trim().split(/\s+/).map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+    ? user.name
+        .trim()
+        .split(/\s+/)
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
     : 'U';
 
   const handleLogout = () => {
@@ -22,6 +28,11 @@ export default function Header({ onMenuClick }) {
     navigate('/');
     setMenuOpen(false);
   };
+
+  const role = user?.role || 'USER';
+  const isCompany = role === 'COMPANY';
+  const profilePath = isCompany ? '/company/profile' : '/profile';
+  const profileLabel = isCompany ? 'Company Profile' : 'Student Profile';
 
   return (
     <header className="app-header app-header-dark">
@@ -45,11 +56,21 @@ export default function Header({ onMenuClick }) {
         />
       </div>
       <nav className="app-nav">
-        <Link to="/dashboard" className={navClass('/dashboard', true)}>Home</Link>
-        <Link to="/documents" className={navClass('/documents', false)}>Documents</Link>
-        <Link to="/tech-news" className={navClass('/tech-news', true)}>Tech News</Link>
-        <Link to="/ai-career" className={navClass('/ai-career', true)}>AI Career</Link>
-        <Link to="/predictor" className={navClass('/predictor', true)}>Predictor</Link>
+        <Link to="/dashboard" className={navClass('/dashboard', true)}>
+          Home
+        </Link>
+        <Link to="/documents" className={navClass('/documents', false)}>
+          Documents
+        </Link>
+        <Link to="/tech-news" className={navClass('/tech-news', true)}>
+          Tech News
+        </Link>
+        <Link to="/ai-career" className={navClass('/ai-career', true)}>
+          AI Career
+        </Link>
+        <Link to="/predictor" className={navClass('/predictor', true)}>
+          Predictor
+        </Link>
       </nav>
       <div className="header-right">
         <div className="user-menu-wrap">
@@ -66,8 +87,8 @@ export default function Header({ onMenuClick }) {
             <>
               <div className="backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />
               <div className="user-dropdown user-dropdown-dark">
-                <Link to="/profile" onClick={() => setMenuOpen(false)}>
-                  <FiUser /> Profile
+                <Link to={profilePath} onClick={() => setMenuOpen(false)}>
+                  <FiUser /> {profileLabel}
                 </Link>
                 <button type="button" onClick={handleLogout}>
                   <FiLogOut /> Logout

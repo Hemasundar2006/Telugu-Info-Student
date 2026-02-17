@@ -126,7 +126,9 @@ export default function Register() {
           toast.success('Recruiter account created');
         }
         
-        navigate('/dashboard', { replace: true });
+        // After creating the company account via shared register,
+        // send recruiter directly to the company profile page.
+        navigate('/company/profile', { replace: true });
       } else {
         toast.error(res.error || 'Registration failed');
       }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   getUserProfileByEmail,
@@ -318,6 +319,11 @@ export default function Profile() {
         </p>
       </div>
     );
+  }
+
+  if (user.role === 'COMPANY') {
+    // Company accounts should manage their details in the company profile page
+    return <Navigate to="/company/profile" replace />;
   }
 
   return (

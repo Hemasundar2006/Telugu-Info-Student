@@ -11,7 +11,7 @@ export default function CompanyVerification() {
   const loadCompanies = async () => {
     setLoading(true);
     try {
-      const res = await searchCompanies({ verificationStatus: 'PENDING', limit: 50, page: 1 });
+      const res = await searchCompanies({ verificationStatus: 'pending', limit: 50, page: 1 });
       const list = res?.data || res?.results || [];
       setCompanies(list);
     } catch (err) {
@@ -29,8 +29,8 @@ export default function CompanyVerification() {
     setVerifyingId(companyId);
     try {
       const payload = {
-        verificationStatus: action === 'approve' ? 'VERIFIED' : 'REJECTED',
-        reason:
+        verificationStatus: action === 'approve' ? 'verified' : 'rejected',
+        verificationNote:
           action === 'approve' ? 'Approved by Super Admin' : 'Rejected by Super Admin',
       };
       await verifyCompany(companyId, payload);

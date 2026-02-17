@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import {
   getMyCompanyProfile,
-  updateCompanyProfile,
+  updateMyCompanyProfile,
 } from '../../api/companies';
 import { handleApiError } from '../../utils/errorHandler';
 
@@ -206,15 +206,6 @@ export default function CompanyProfile() {
 
   const onSubmit = async (data) => {
     if (!company) return;
-    const isVerified =
-      company.isVerified === true ||
-      company.verificationStatus === 'VERIFIED' ||
-      company.verificationStatus === 'APPROVED';
-    if (!isVerified) {
-      toast.error('Company not verified yet. Wait for admin approval.');
-      return;
-    }
-
     setSaving(true);
     try {
       const payload = {
@@ -287,7 +278,7 @@ export default function CompanyProfile() {
         businessLicense: data.businessLicense || undefined,
       };
 
-      const res = await updateCompanyProfile(company.companyId, payload);
+      const res = await updateMyCompanyProfile(payload);
       if (res?.success && res.data) {
         setCompany(res.data);
         toast.success('Company profile updated');
@@ -340,10 +331,11 @@ export default function CompanyProfile() {
     );
   }
 
+  const normalizedStatus = (company.verificationStatus || '').toString().toLowerCase();
   const isVerified =
-    company.isVerified === true ||
-    company.verificationStatus === 'VERIFIED' ||
-    company.verificationStatus === 'APPROVED';
+    company.isVerified === true || normalizedStatus === 'verified';
+  const isRejected = normalizedStatus === 'rejected';
+  const isPending = !isVerified && !isRejected;
   const completion =
     typeof company.profileCompletionPercentage === 'number'
       ? company.profileCompletionPercentage
@@ -368,10 +360,16 @@ export default function CompanyProfile() {
             className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
               isVerified
                 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200'
+                : isRejected
+                ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200'
                 : 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200'
             }`}
           >
-            {isVerified ? 'Verified' : 'Pending verification'}
+            {isVerified
+              ? 'Verified'
+              : isRejected
+              ? 'Rejected'
+              : 'Pending verification'}
           </span>
           <div className="w-48">
             <div className="flex items-center justify-between mb-1">
@@ -389,10 +387,16 @@ export default function CompanyProfile() {
               />
             </div>
           </div>
-          {!isVerified && (
+          {isPending && (
             <p className="max-w-xs text-xs text-slate-600 dark:text-slate-400 text-right">
-              Your company is under review. You can preview sections, but editing unlocks only after
-              Super Admin verification.
+              Your company is under review. You can continue updating your profile, but changes will
+              be active for students only after Super Admin re-approves.
+            </p>
+          )}
+          {isRejected && (
+            <p className="max-w-xs text-xs text-slate-600 dark:text-slate-400 text-right">
+              Your company was rejected. Please contact support or update details and wait for a new
+              review.
             </p>
           )}
         </div>
@@ -412,10 +416,10 @@ export default function CompanyProfile() {
               <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Company name
               </label>
-              <input
-                type="text"
-                {...register('companyName')}
-                disabled={!isVerified}
+                <input
+                  type="text"
+                  {...register('companyName')}
+                  disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
               {errors.companyName && (
@@ -428,10 +432,10 @@ export default function CompanyProfile() {
               <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Registration number
               </label>
-              <input
-                type="text"
-                {...register('registrationNumber')}
-                disabled={!isVerified}
+                <input
+                  type="text"
+                  {...register('registrationNumber')}
+                  disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -439,10 +443,10 @@ export default function CompanyProfile() {
               <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Year founded
               </label>
-              <input
-                type="number"
-                {...register('yearFounded')}
-                disabled={!isVerified}
+                <input
+                  type="number"
+                  {...register('yearFounded')}
+                  disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -450,10 +454,10 @@ export default function CompanyProfile() {
               <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Company type
               </label>
-              <input
-                type="text"
-                {...register('companyType')}
-                disabled={!isVerified}
+                <input
+                  type="text"
+                  {...register('companyType')}
+                  disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 placeholder="Private, Public, Startup, etc."
               />
@@ -462,10 +466,10 @@ export default function CompanyProfile() {
               <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Industry
               </label>
-              <input
-                type="text"
-                {...register('industry')}
-                disabled={!isVerified}
+                <input
+                  type="text"
+                  {...register('industry')}
+                  disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 placeholder="IT Services, EdTech, etc."
               />
@@ -474,10 +478,10 @@ export default function CompanyProfile() {
               <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Company size
               </label>
-              <input
-                type="text"
-                {...register('companySize')}
-                disabled={!isVerified}
+                <input
+                  type="text"
+                  {...register('companySize')}
+                  disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 placeholder="e.g. 11–50, 51–200"
               />
@@ -498,7 +502,7 @@ export default function CompanyProfile() {
               <input
                 type="url"
                 {...register('website')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 placeholder="https://company.com"
               />
@@ -513,7 +517,7 @@ export default function CompanyProfile() {
               <input
                 type="url"
                 {...register('linkedInProfile')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 placeholder="https://linkedin.com/company/..."
               />
@@ -530,7 +534,7 @@ export default function CompanyProfile() {
               <input
                 type="url"
                 {...register('logo')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
               {errors.logo && (
@@ -544,7 +548,7 @@ export default function CompanyProfile() {
               <input
                 type="url"
                 {...register('banner')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
               {errors.banner && (
@@ -558,7 +562,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('gallery')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -569,7 +573,7 @@ export default function CompanyProfile() {
               <input
                 type="url"
                 {...register('videoUrl')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 placeholder="YouTube or other hosted video"
               />
@@ -595,7 +599,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('tagline')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -606,7 +610,7 @@ export default function CompanyProfile() {
               <textarea
                 rows={4}
                 {...register('about')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -618,7 +622,7 @@ export default function CompanyProfile() {
                 <input
                   type="text"
                   {...register('coreValues')}
-                  disabled={!isVerified}
+                  disabled={isRejected}
                   className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 />
               </div>
@@ -629,7 +633,7 @@ export default function CompanyProfile() {
                 <input
                   type="text"
                   {...register('products')}
-                  disabled={!isVerified}
+                  disabled={isRejected}
                   className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 />
               </div>
@@ -641,7 +645,7 @@ export default function CompanyProfile() {
               <textarea
                 rows={3}
                 {...register('achievements')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -661,7 +665,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('headquarters')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 placeholder="City, State, Country"
               />
@@ -673,7 +677,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('officeLocations')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -684,7 +688,7 @@ export default function CompanyProfile() {
               <input
                 type="email"
                 {...register('contactEmail')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
               {errors.contactEmail && (
@@ -700,7 +704,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('hrContactNumber')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -714,7 +718,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('recruiterName')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -725,7 +729,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('recruiterDesignation')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -736,7 +740,7 @@ export default function CompanyProfile() {
               <input
                 type="email"
                 {...register('recruiterEmail')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
               {errors.recruiterEmail && (
@@ -752,7 +756,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('recruiterPhone')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -763,7 +767,7 @@ export default function CompanyProfile() {
               <input
                 type="url"
                 {...register('recruiterLinkedIn')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -783,7 +787,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('benefits')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -794,7 +798,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('cultureTags')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -805,7 +809,7 @@ export default function CompanyProfile() {
               <textarea
                 rows={3}
                 {...register('diversityStatement')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -816,7 +820,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('workEnvironment')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 placeholder="Hybrid, Remote, Office-first, etc."
               />
@@ -828,7 +832,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('dressCode')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -848,7 +852,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('hiringTimeline')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
                 placeholder="e.g. 2–4 weeks"
               />
@@ -860,7 +864,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('commonRoles')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -871,7 +875,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('preferredQualifications')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -882,7 +886,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('hiringIndustries')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -893,7 +897,7 @@ export default function CompanyProfile() {
               <input
                 type="number"
                 {...register('salaryMin')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -904,7 +908,7 @@ export default function CompanyProfile() {
               <input
                 type="number"
                 {...register('salaryMax')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -918,7 +922,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('gstNumber')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -929,7 +933,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('panNumber')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -940,7 +944,7 @@ export default function CompanyProfile() {
               <input
                 type="text"
                 {...register('businessLicense')}
-                disabled={!isVerified}
+                disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
             </div>
@@ -950,7 +954,7 @@ export default function CompanyProfile() {
         <div className="flex justify-end pt-2">
           <button
             type="submit"
-            disabled={saving || !isVerified}
+            disabled={saving || isRejected}
             className="inline-flex items-center justify-center rounded-lg bg-primary text-white px-4 py-2 text-sm font-semibold hover:bg-primary-dark disabled:opacity-60 disabled:cursor-not-allowed transition"
           >
             {saving ? 'Saving...' : 'Save changes'}

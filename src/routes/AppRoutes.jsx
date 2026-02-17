@@ -38,9 +38,11 @@ import CompanyRegister from '../pages/Company/CompanyRegister';
 import CompanyLogin from '../pages/Company/CompanyLogin';
 import CompanyProfile from '../pages/Company/CompanyProfile';
 import CompanyVerification from '../pages/Company/CompanyVerification';
+import CompanyPosts from '../pages/Company/CompanyPosts';
 import AdminJobList from '../pages/Jobs/AdminJobList';
 import CreateEditJob from '../pages/Jobs/CreateEditJob';
 import AdminJobDetail from '../pages/Jobs/AdminJobDetail';
+import PostsFeed from '../pages/PostsFeed';
 import StudentNotifications from '../pages/Student/StudentNotifications';
 import StudentJobListings from '../pages/Student/StudentJobListings';
 
@@ -133,6 +135,14 @@ export default function AppRoutes() {
           }
         />
         <Route
+          path="/company/posts"
+          element={
+            <ProtectedRoute allowedRoles={['COMPANY']}>
+              <Layout><CompanyPosts /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin/companies"
           element={
             <ProtectedRoute allowedRoles={['SUPER_ADMIN']}>
@@ -193,6 +203,14 @@ export default function AppRoutes() {
           element={
             <ProtectedRoute>
               <Layout><Profile /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/posts"
+          element={
+            <ProtectedRoute>
+              <Layout><PostsFeed /></Layout>
             </ProtectedRoute>
           }
         />

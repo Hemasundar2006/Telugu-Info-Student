@@ -24,6 +24,7 @@ import './Layout.css';
 const navByRole = {
   USER: [
     { to: '/dashboard', label: 'Dashboard', icon: FiHome },
+    { to: '/posts', label: 'Company Posts', icon: FiBriefcase },
     { to: '/student/notifications', label: 'Job Notifications', icon: FiBell },
     { to: '/student/jobs', label: 'Job Listings', icon: FiBriefcase },
     { to: '/documents/hall-tickets', label: 'Hall Tickets', icon: FiFileText },
@@ -37,6 +38,7 @@ const navByRole = {
   ],
   COMPANY: [
     { to: '/dashboard', label: 'Dashboard', icon: FiHome },
+    { to: '/company/posts', label: 'Company Posts', icon: FiBriefcase },
     { to: '/company/profile', label: 'Company Profile', icon: FiUser },
   ],
   SUPPORT: [

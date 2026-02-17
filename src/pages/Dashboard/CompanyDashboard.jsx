@@ -37,14 +37,13 @@ export default function CompanyDashboard() {
     loadCompany();
   }, [loadCompany]);
 
-  const rawStatus = company?.verificationStatus || 'PENDING';
-  const status =
-    company?.isVerified === true ||
-    rawStatus === 'VERIFIED' ||
-    rawStatus === 'APPROVED'
-      ? 'VERIFIED'
-      : rawStatus;
-  const isVerified = status === 'VERIFIED';
+  const normalizedStatus = (company?.verificationStatus || '')
+    .toString()
+    .trim()
+    .toLowerCase();
+  const isVerified = company?.isVerified === true || normalizedStatus === 'verified';
+  const isRejected = normalizedStatus === 'rejected';
+  const status = isVerified ? 'verified' : isRejected ? 'rejected' : 'pending';
 
   return (
     <div className="dashboard-page">
@@ -60,9 +59,9 @@ export default function CompanyDashboard() {
         </div>
         <div className="stat-card">
           <span className="stat-value">
-            {status === 'VERIFIED'
+            {status === 'verified'
               ? 'Verified'
-              : status === 'REJECTED'
+              : status === 'rejected'
               ? 'Rejected'
               : 'Pending'}
           </span>
@@ -86,7 +85,7 @@ export default function CompanyDashboard() {
         </div>
       )}
 
-      {!loading && !isVerified && (
+      {!loading && !isVerified && !isRejected && (
         <div className="dashboard-alert dashboard-alert-warning">
           <p>
             Your company is currently <strong>pending verification</strong>. A Telugu Info
@@ -101,6 +100,15 @@ export default function CompanyDashboard() {
           <p>
             Your company is <strong>verified</strong>. You can now complete your company profile
             and start posting jobs for students.
+          </p>
+        </div>
+      )}
+
+      {!loading && isRejected && (
+        <div className="dashboard-alert dashboard-alert-error">
+          <p>
+            Your company was <strong>rejected</strong>. Please contact support or update your
+            details and wait for a new review.
           </p>
         </div>
       )}
