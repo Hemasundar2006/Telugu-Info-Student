@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -20,13 +20,20 @@ export default function Login() {
   const location = useLocation();
   const { login: setAuth } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [mode, setMode] = useState('student'); // 'student' | 'company'
+  const [mode, setMode] = useState('student'); // 'student' (USER) | 'company' (COMPANY)
   const from = location.state?.from?.pathname || '/dashboard';
 
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(schema),
     defaultValues: { email: '', password: '' },
   });
+
+  // If user hits /company/login, default to recruiter/company mode for clarity
+  useEffect(() => {
+    if (location.pathname === '/company/login') {
+      setMode('company');
+    }
+  }, [location.pathname]);
 
   const onSubmit = async (data) => {
     try {
@@ -64,15 +71,15 @@ export default function Login() {
       <div className="login-form-panel">
         <div className="login-form-inner">
           <p className="login-badge">
-            {isStudent ? 'Student login' : 'Company / Recruiter login'}
+            {isStudent ? 'Student login (role: USER)' : 'Recruiter / company login (role: COMPANY)'}
           </p>
           <h1 className="login-title">
             {isStudent ? 'Sign in to Telugu Info' : 'Sign in to recruiter portal'}
           </h1>
           <p className="login-subtitle">
             {isStudent
-              ? 'Continue to your dashboard and career tools.'
-              : 'Access your company dashboard, manage jobs, and hire students.'}
+              ? 'Sign in as a student (USER) to access your dashboard and career tools.'
+              : 'Sign in as a recruiter (COMPANY) to access your company dashboard and hiring tools.'}
           </p>
 
           <div className="login-toggle-wrap">
@@ -94,7 +101,7 @@ export default function Login() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="login-form">
             <div className="login-field">
-              <label>{isStudent ? 'Email' : 'Company email *'}</label>
+              <label>{isStudent ? 'Student email *' : 'Company email *'}</label>
               <div className="login-input-wrap">
                 <FiMail className="input-icon" size={18} aria-hidden />
                 <input
@@ -137,8 +144,8 @@ export default function Login() {
             <div className="login-actions">
               <span className="hint">
                 {isStudent
-                  ? 'Use the email and password you registered with.'
-                  : 'Use the company email and password you registered with.'}
+                  ? 'Use the student (USER) email and password you registered with.'
+                  : 'Use the recruiter/company (COMPANY) email and password you registered with.'}
               </span>
               <Link to="/forgot-password" className="login-forgot">
                 Forgot password?
@@ -165,13 +172,19 @@ export default function Login() {
           <div className="login-footer">
             <p>
               Don&apos;t have an account?{' '}
-              <Link to="/register">
-                {isStudent ? 'Create account' : 'Create company account'}
+              <Link to={isStudent ? '/register' : '/company/register'}>
+                {isStudent ? 'Create student account' : 'Create company account'}
               </Link>
             </p>
-            {isStudent && (
+            {isStudent ? (
               <p>
-                Are you a recruiter? <Link to="/company/login">Company login</Link>
+                Are you a recruiter?{' '}
+                <Link to="/company/login">Recruiter / company login</Link>
+              </p>
+            ) : (
+              <p>
+                Are you a student?{' '}
+                <Link to="/login">Student login</Link>
               </p>
             )}
           </div>
