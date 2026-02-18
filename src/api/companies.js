@@ -8,6 +8,10 @@ export const getMyCompanyProfile = () => api.get('/companies/me');
 // Recruiter: update own company profile (auto re-verification handled by backend)
 export const updateMyCompanyProfile = (payload) => api.put('/companies/me', payload);
 
+// Recruiter: list jobs posted by this company
+export const getMyCompanyJobs = (params = {}) =>
+  api.get('/companies/me/jobs', { params: { page: 1, limit: 10, ...params } });
+
 export const registerCompany = (payload) =>
   api.post('/companies/register', payload);
 

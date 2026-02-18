@@ -21,6 +21,7 @@ const EMPTY_PROFILE = {
   email: '',
   mobileNumber: '',
   isMobileVerified: false,
+  profilePhoto: '',
   dob: '',
   gender: '',
   currentCity: '',
@@ -85,6 +86,7 @@ export default function Profile() {
           setForm({
             ...EMPTY_PROFILE,
             ...existing,
+            profilePhoto: existing.profilePhoto ?? '',
             dob: existing.dob ? existing.dob.slice(0, 10) : '',
             skills: Array.isArray(existing.skills) ? existing.skills : [],
             hobbies: Array.isArray(existing.hobbies) ? existing.hobbies : [],
@@ -251,6 +253,7 @@ export default function Profile() {
 
     const payload = {
       ...form,
+      profilePhoto: form.profilePhoto?.trim() || undefined,
       dob: form.dob ? new Date(form.dob).toISOString() : undefined,
       currentEducation: {
         ...form.currentEducation,
@@ -291,6 +294,7 @@ export default function Profile() {
       setForm({
         ...EMPTY_PROFILE,
         ...doc,
+        profilePhoto: doc.profilePhoto ?? '',
         dob: doc.dob ? doc.dob.slice(0, 10) : '',
         skills: Array.isArray(doc.skills) ? doc.skills : [],
         hobbies: Array.isArray(doc.hobbies) ? doc.hobbies : [],
@@ -456,6 +460,19 @@ export default function Profile() {
                     value={form.currentCity || ''}
                     onChange={(e) => handleChange('currentCity', e.target.value)}
                   />
+                </label>
+
+                <label className="profile-field profile-field-full">
+                  <span>Profile photo URL</span>
+                  <input
+                    type="url"
+                    value={form.profilePhoto || ''}
+                    onChange={(e) => handleChange('profilePhoto', e.target.value)}
+                    placeholder="https://example.com/avatars/me.jpg"
+                  />
+                  <span className="profile-helper-inline">
+                    Used as your avatar on posts and across the app (synced to your account).
+                  </span>
                 </label>
               </div>
 

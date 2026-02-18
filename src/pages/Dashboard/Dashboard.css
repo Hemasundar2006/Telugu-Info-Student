@@ -145,3 +145,77 @@
   transform: none;
   border-color: var(--color-border);
 }
+
+/* Job postings block (company dashboard) */
+.dashboard-card-jobs {
+  cursor: default;
+}
+
+.dashboard-card-jobs:hover {
+  transform: none;
+}
+
+.dashboard-card-muted {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.dashboard-job-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dashboard-job-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dashboard-job-list li:last-child {
+  border-bottom: none;
+}
+
+.dashboard-job-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboard-job-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.dashboard-job-badge-active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #059669;
+}
+
+.dashboard-job-badge-draft {
+  background: rgba(107, 114, 128, 0.2);
+  color: var(--color-text-muted);
+}
+
+.dashboard-job-badge-closed,
+.dashboard-job-badge-expired {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
+
+.dashboard-job-date {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}

@@ -281,7 +281,7 @@ export default function CompanyProfile() {
       const res = await updateMyCompanyProfile(payload);
       if (res?.success && res.data) {
         setCompany(res.data);
-        toast.success('Company profile updated');
+        toast.success('Profile updated successfully.');
       } else {
         toast.error(res?.error || 'Update failed');
       }
@@ -389,8 +389,8 @@ export default function CompanyProfile() {
           </div>
           {isPending && (
             <p className="max-w-xs text-xs text-slate-600 dark:text-slate-400 text-right">
-              Your company is under review. You can continue updating your profile, but changes will
-              be active for students only after Super Admin re-approves.
+              Your company is under review. You can continue updating your profile; it will be
+              visible to students after Super Admin approves your company.
             </p>
           )}
           {isRejected && (
@@ -770,6 +770,24 @@ export default function CompanyProfile() {
                 disabled={isRejected}
                 className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
               />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
+                Recruiter photo URL
+              </label>
+              <input
+                type="url"
+                {...register('recruiterPhoto')}
+                disabled={isRejected}
+                className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-50 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-primary/70"
+                placeholder="https://example.com/recruiter.jpg"
+              />
+              {errors.recruiterPhoto && (
+                <p className="mt-1 text-xs text-error">{errors.recruiterPhoto.message}</p>
+              )}
+              <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                Used as author avatar on your company posts (synced to your account).
+              </p>
             </div>
           </div>
         </section>

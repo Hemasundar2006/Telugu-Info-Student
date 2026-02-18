@@ -3,6 +3,12 @@ import api from './config';
 // Create a new company post (role: COMPANY)
 export const createPost = (payload) => api.post('/posts', payload);
 
+// Update post (role: COMPANY; must be author). Body: { text?, imageUrl?, linkPreview? }
+export const updatePost = (postId, payload) => api.put(`/posts/${postId}`, payload);
+
+// Delete post (role: COMPANY; must be author)
+export const deletePost = (postId) => api.delete(`/posts/${postId}`);
+
 // Feed: latest or daily
 export const getFeed = (params) => api.get('/posts/feed', { params });
 

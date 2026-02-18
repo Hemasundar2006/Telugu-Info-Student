@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
+import { FiHeart, FiMessageCircle, FiSend, FiBookmark, FiMoreVertical, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
-import { createPost, getFeed, getPostShares } from '../../api/posts';
+import { createPost, getFeed, getPostShares, updatePost, deletePost } from '../../api/posts';
 import '../../pages/Dashboard/Dashboard.css';
+import './CompanyPosts.css';
 
 export default function CompanyPosts() {
   const { user } = useAuth();
   const [form, setForm] = useState({
     text: '',
+    imageUrl: '',
     url: '',
     title: '',
     description: '',
@@ -18,8 +21,22 @@ export default function CompanyPosts() {
   const [activeSharesPost, setActiveSharesPost] = useState(null);
   const [shares, setShares] = useState([]);
   const [sharesLoading, setSharesLoading] = useState(false);
+  const [menuOpenPostId, setMenuOpenPostId] = useState(null);
+  const [editingPostId, setEditingPostId] = useState(null);
+  const [editForm, setEditForm] = useState({
+    text: '',
+    imageUrl: '',
+    url: '',
+    title: '',
+    description: '',
+    image: '',
+  });
+  const [updating, setUpdating] = useState(false);
+  const [deletingPostId, setDeletingPostId] = useState(null);
 
   const isCompany = user?.role === 'COMPANY';
+
+  const getPostId = (post) => post?.id ?? post?._id;
 
   const loadCompanyPosts = async () => {
     setLoading(true);
@@ -53,13 +70,17 @@ export default function CompanyPosts() {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    if (!form.text.trim() && !form.url.trim()) {
+    const hasText = !!form.text.trim();
+    const hasImage = !!form.imageUrl.trim();
+    const hasLink = !!form.url.trim();
+    if (!hasText && !hasImage && !hasLink) {
       return;
     }
     setCreating(true);
     try {
       const payload = {
         text: form.text.trim() || undefined,
+        imageUrl: form.imageUrl.trim() || undefined,
         linkPreview: form.url
           ? {
               url: form.url.trim(),
@@ -75,6 +96,7 @@ export default function CompanyPosts() {
         setPosts((prev) => [created, ...prev]);
         setForm({
           text: '',
+          imageUrl: '',
           url: '',
           title: '',
           description: '',
@@ -91,12 +113,10 @@ export default function CompanyPosts() {
 
   const openShares = async (postId) => {
     if (activeSharesPost === postId) {
-      // toggle off
       setActiveSharesPost(null);
       setShares([]);
       return;
     }
-
     setActiveSharesPost(postId);
     setShares([]);
     setSharesLoading(true);
@@ -109,6 +129,80 @@ export default function CompanyPosts() {
       console.error('Failed to load shares', err);
     } finally {
       setSharesLoading(false);
+    }
+  };
+
+  const openEdit = (post) => {
+    const link = post.linkPreview || post.previewlink || {};
+    setEditForm({
+      text: post.text ?? post.description ?? '',
+      imageUrl: post.imageUrl ?? post.image ?? '',
+      url: link?.url ?? '',
+      title: link?.title ?? '',
+      description: link?.description ?? '',
+      image: link?.image ?? '',
+    });
+    setEditingPostId(getPostId(post));
+    setMenuOpenPostId(null);
+  };
+
+  const handleEditChange = (field, value) => {
+    setEditForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!editingPostId) return;
+    const hasText = !!editForm.text.trim();
+    const hasImage = !!editForm.imageUrl.trim();
+    const hasLink = !!editForm.url.trim();
+    if (!hasText && !hasImage && !hasLink) return;
+    setUpdating(true);
+    try {
+      const payload = {
+        text: editForm.text.trim() || undefined,
+        imageUrl: editForm.imageUrl.trim() || undefined,
+        linkPreview: editForm.url
+          ? {
+              url: editForm.url.trim(),
+              title: editForm.title.trim() || undefined,
+              description: editForm.description.trim() || undefined,
+              image: editForm.image.trim() || undefined,
+            }
+          : undefined,
+      };
+      const res = await updatePost(editingPostId, payload);
+      const updated = res?.data?.data ?? res?.data ?? res;
+      if (updated) {
+        setPosts((prev) =>
+          prev.map((p) => (getPostId(p) === editingPostId ? { ...p, ...updated } : p))
+        );
+      }
+      setEditingPostId(null);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to update post', err);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleDelete = async (postId) => {
+    if (!window.confirm('Delete this post? This cannot be undone.')) return;
+    setDeletingPostId(postId);
+    try {
+      await deletePost(postId);
+      setPosts((prev) => prev.filter((p) => getPostId(p) !== postId));
+      if (activeSharesPost === postId) {
+        setActiveSharesPost(null);
+        setShares([]);
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to delete post', err);
+    } finally {
+      setDeletingPostId(null);
+      setMenuOpenPostId(null);
     }
   };
 
@@ -157,6 +251,15 @@ export default function CompanyPosts() {
               value={form.text}
               onChange={(e) => handleChange('text', e.target.value)}
               placeholder="Example: We are hiring for a Node.js developer role in Hyderabad..."
+            />
+          </div>
+          <div className="company-posts-field">
+            <label>Main image URL (optional)</label>
+            <input
+              type="url"
+              value={form.imageUrl}
+              onChange={(e) => handleChange('imageUrl', e.target.value)}
+              placeholder="https://example.com/photo.jpg"
             />
           </div>
           <div className="company-posts-link-grid">
@@ -225,100 +328,166 @@ export default function CompanyPosts() {
         </div>
       )}
 
-      <div className="dashboard-cards posts-feed-list company-posts-list">
+      <div className="company-posts-list">
         {posts.map((post) => {
+          const postId = getPostId(post);
           const link = post.linkPreview || post.previewlink || {};
           const createdAt = post.createdAt ? new Date(post.createdAt) : null;
+          const authorName =
+            post.author?.companyName ||
+            post.author?.name ||
+            user?.name ||
+            user?.email?.split('@')[0] ||
+            'Company';
+          const initial = (authorName || 'C').toString().trim().slice(0, 1).toUpperCase();
+          const isMenuOpen = menuOpenPostId === postId;
+          const isEditing = editingPostId === postId;
+          const isDeleting = deletingPostId === postId;
 
           return (
-            <div key={post._id} className="dashboard-card posts-feed-card company-post-card">
-              <div className="company-post-card-header">
-                <div className="company-post-card-meta">
-                  <div className="company-post-card-title">
-                    {post.text
-                      ? post.text.length > 80
-                        ? `${post.text.slice(0, 80)}…`
-                        : post.text
-                      : 'Company post'}
-                  </div>
+            <article key={postId} className="post-frame">
+              {/* Header: avatar, name, menu */}
+              <div className="post-frame-header">
+                <div className="post-frame-avatar">{initial}</div>
+                <div className="post-frame-author">
+                  <div className="post-frame-author-name">{authorName}</div>
                   {createdAt && (
-                    <div className="company-post-card-date">
-                      Posted on {createdAt.toLocaleDateString()}{' '}
-                      {createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <div className="post-frame-author-meta">
+                      {createdAt.toLocaleDateString()} · {createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   )}
                 </div>
-                <div className="company-post-card-stats">
-                  <span>{post.likesCount || 0} likes</span>
-                  <span>{post.commentsCount || 0} comments</span>
-                  <span>{post.shareCount || 0} shares</span>
+                <div className="post-frame-menu-wrap">
+                  <button
+                    type="button"
+                    className="post-frame-menu"
+                    aria-label="More options"
+                    onClick={() => setMenuOpenPostId(isMenuOpen ? null : postId)}
+                    disabled={isDeleting}
+                  >
+                    <FiMoreVertical size={20} />
+                  </button>
+                  {isMenuOpen && (
+                    <>
+                      <div
+                        className="post-frame-menu-backdrop"
+                        aria-hidden
+                        onClick={() => setMenuOpenPostId(null)}
+                      />
+                      <div className="post-frame-menu-dropdown">
+                        <button
+                          type="button"
+                          className="post-frame-menu-item"
+                          onClick={() => openEdit(post)}
+                        >
+                          <FiEdit2 size={16} /> Edit
+                        </button>
+                        <button
+                          type="button"
+                          className="post-frame-menu-item post-frame-menu-item-danger"
+                          onClick={() => handleDelete(postId)}
+                          disabled={isDeleting}
+                        >
+                          <FiTrash2 size={16} /> {isDeleting ? 'Deleting…' : 'Delete'}
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
-              {post.text && (
-                <p className="posts-feed-text company-post-card-text">
-                  {post.text}
-                </p>
+              {/* Media: main post image (imageUrl) */}
+              {(post.imageUrl || post.image) && (
+                <div className="post-frame-media">
+                  <img
+                    src={post.imageUrl || post.image}
+                    alt="Post"
+                    className="post-frame-media-image"
+                  />
+                </div>
               )}
 
-              {link?.url && (
-                <a
-                  href={link.url}
-                  className="posts-feed-link-preview"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {link.image && (
-                    <div className="posts-feed-link-image-wrap">
-                      <img src={link.image} alt={link.title || ''} />
-                    </div>
-                  )}
-                  <div className="posts-feed-link-body">
-                    <div className="posts-feed-link-title">{link.title || link.url}</div>
-                    {link.description && (
-                      <div className="posts-feed-link-desc">
-                        {link.description}
-                      </div>
-                    )}
-                    <div className="posts-feed-link-url">{link.url}</div>
+              {/* Content: light grey area + description + link preview */}
+              <div className="post-frame-content">
+                {createdAt && (
+                  <div className="post-frame-date">
+                    {createdAt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}
                   </div>
-                </a>
-              )}
+                )}
+                {(post.description ?? post.text) && (
+                  <p className="post-frame-text">{post.description ?? post.text}</p>
+                )}
+                {link?.url && (
+                  <a
+                    href={link.url}
+                    className="post-frame-link"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {link.image && (
+                      <img
+                        src={link.image}
+                        alt={link.title || ''}
+                        className="post-frame-link-image"
+                      />
+                    )}
+                    <div className="post-frame-link-body">
+                      <h3 className="post-frame-link-title">{link.title || link.url}</h3>
+                      {link.description && (
+                        <p className="post-frame-link-desc">{link.description}</p>
+                      )}
+                      <p className="post-frame-link-url">{link.url}</p>
+                    </div>
+                  </a>
+                )}
+              </div>
 
-              <div className="company-post-card-footer">
+              {/* Footer: like, comment, share, bookmark + view share tracking */}
+              <div className="post-frame-footer">
+                <span className="post-frame-action" title="Likes">
+                  <FiHeart size={20} /> {post.likesCount ?? 0}
+                </span>
+                <span className="post-frame-action" title="Comments">
+                  <FiMessageCircle size={20} /> {post.commentsCount ?? 0}
+                </span>
+                <span className="post-frame-action" title="Shares">
+                  <FiSend size={20} /> {post.shareCount ?? 0}
+                </span>
+                <span className="post-frame-footer-spacer" />
                 <button
                   type="button"
-                  className="posts-feed-action-btn"
-                  onClick={() => openShares(post._id)}
+                  className="post-frame-action"
+                  onClick={() => openShares(postId)}
+                  title={activeSharesPost === postId ? 'Hide share tracking' : 'View share tracking'}
                 >
-                  {activeSharesPost === post._id ? 'Hide share tracking' : 'View share tracking'}
+                  <FiBookmark size={20} />
+                  {activeSharesPost === postId ? 'Hide tracking' : 'View tracking'}
                 </button>
               </div>
 
-              {activeSharesPost === post._id && (
-                <div className="posts-feed-shares">
-                  <h3 className="company-post-shares-title">Share tracking</h3>
+              {/* Share tracking expandable */}
+              {activeSharesPost === postId && (
+                <div className="post-frame-shares">
+                  <h3 className="post-frame-shares-title">Share tracking</h3>
                   {sharesLoading ? (
                     <p>Loading share tracking...</p>
                   ) : shares.length === 0 ? (
                     <p>No shares recorded yet for this post.</p>
                   ) : (
-                    <ul className="posts-feed-shares-list">
+                    <ul className="post-frame-shares-list">
                       {shares.map((s, index) => {
                         const u = s.user || {};
                         const sharedAt = s.createdAt ? new Date(s.createdAt) : null;
                         return (
-                          <li key={s._id || index} className="posts-feed-share-item">
-                            <div className="posts-feed-comment-avatar">
+                          <li key={s._id || index} className="post-frame-share-item">
+                            <div className="post-frame-share-avatar">
                               {(u.name || 'U').toString().trim().slice(0, 1).toUpperCase()}
                             </div>
-                            <div className="posts-feed-comment-body">
-                              <div className="posts-feed-comment-author">
-                                {u.name || 'User'}
-                              </div>
-                              <div className="posts-feed-comment-text">
+                            <div className="post-frame-share-body">
+                              <div className="post-frame-share-name">{u.name || 'User'}</div>
+                              <div className="post-frame-share-date">
                                 {sharedAt
-                                  ? `Shared on ${sharedAt.toLocaleDateString()} ${sharedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+                                  ? sharedAt.toLocaleDateString() + ' ' + sharedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                                   : 'Shared'}
                               </div>
                             </div>
@@ -329,7 +498,85 @@ export default function CompanyPosts() {
                   )}
                 </div>
               )}
-            </div>
+
+              {/* Edit form (inline) */}
+              {isEditing && (
+                <div className="post-frame-edit">
+                  <form className="company-posts-form" onSubmit={handleEditSubmit}>
+                    <div className="company-posts-field">
+                      <label>Description</label>
+                      <textarea
+                        rows={3}
+                        value={editForm.text}
+                        onChange={(e) => handleEditChange('text', e.target.value)}
+                        placeholder="Description..."
+                      />
+                    </div>
+                    <div className="company-posts-field">
+                      <label>Main image URL</label>
+                      <input
+                        type="url"
+                        value={editForm.imageUrl}
+                        onChange={(e) => handleEditChange('imageUrl', e.target.value)}
+                        placeholder="https://example.com/photo.jpg"
+                      />
+                    </div>
+                    <div className="company-posts-link-grid">
+                      <div className="company-posts-field">
+                        <label>Link URL</label>
+                        <input
+                          type="url"
+                          value={editForm.url}
+                          onChange={(e) => handleEditChange('url', e.target.value)}
+                          placeholder="https://..."
+                        />
+                      </div>
+                      <div className="company-posts-field">
+                        <label>Link title</label>
+                        <input
+                          type="text"
+                          value={editForm.title}
+                          onChange={(e) => handleEditChange('title', e.target.value)}
+                        />
+                      </div>
+                      <div className="company-posts-field">
+                        <label>Link description</label>
+                        <input
+                          type="text"
+                          value={editForm.description}
+                          onChange={(e) => handleEditChange('description', e.target.value)}
+                        />
+                      </div>
+                      <div className="company-posts-field">
+                        <label>Link image URL</label>
+                        <input
+                          type="url"
+                          value={editForm.image}
+                          onChange={(e) => handleEditChange('image', e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className="company-posts-actions">
+                      <button
+                        type="submit"
+                        className="dashboard-refresh-button"
+                        disabled={updating}
+                      >
+                        {updating ? 'Saving…' : 'Save changes'}
+                      </button>
+                      <button
+                        type="button"
+                        className="dashboard-refresh-button post-frame-edit-cancel"
+                        onClick={() => setEditingPostId(null)}
+                        disabled={updating}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+            </article>
           );
         })}
       </div>

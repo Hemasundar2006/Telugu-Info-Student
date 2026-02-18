@@ -8,6 +8,7 @@ import {
   getComments,
   sharePost,
 } from '../api/posts';
+import PostCard from '../components/PostCard';
 import './Dashboard/Dashboard.css';
 
 export default function PostsFeed() {
@@ -22,6 +23,7 @@ export default function PostsFeed() {
   const [newComment, setNewComment] = useState('');
   const [shareText, setShareText] = useState('');
   const [sharingPostId, setSharingPostId] = useState(null);
+  const [activeSharePostId, setActiveSharePostId] = useState(null);
 
   const loadFeed = async (targetPage = 1) => {
     setLoading(true);
@@ -55,10 +57,11 @@ export default function PostsFeed() {
       const likesCount = res?.data?.likesCount;
       setPosts((prev) =>
         prev.map((p) =>
-          p._id === postId
+          (p._id === postId || p.id === postId)
             ? {
                 ...p,
                 likedByViewer: liked,
+                likedByMe: liked,
                 likesCount: likesCount ?? (p.likesCount || 0) + (liked ? 1 : -1),
               }
             : p
@@ -76,10 +79,11 @@ export default function PostsFeed() {
       const saved = res?.data?.saved;
       setPosts((prev) =>
         prev.map((p) =>
-          p._id === postId
+          (p._id === postId || p.id === postId)
             ? {
                 ...p,
                 savedByViewer: saved,
+                savedByMe: saved,
               }
             : p
         )
@@ -134,7 +138,6 @@ export default function PostsFeed() {
 
   const handleShare = async (postId) => {
     if (!shareText.trim()) {
-      // Optional: allow empty share text; here we require some text
       return;
     }
     setSharingPostId(postId);
@@ -155,6 +158,7 @@ export default function PostsFeed() {
           )
         );
         setShareText('');
+        setActiveSharePostId(null);
       }
     } catch (err) {
       // eslint-disable-next-line no-console
@@ -163,6 +167,22 @@ export default function PostsFeed() {
       setSharingPostId(null);
     }
   };
+
+  const getPostId = (p) => p.id ?? p._id;
+
+  const normalizePostForCard = (p) => ({
+    id: getPostId(p),
+    author: p.author || {},
+    imageUrl: p.imageUrl || null,
+    description: p.description ?? p.text ?? '',
+    previewlink: p.linkPreview || p.previewlink || null,
+    likesCount: p.likesCount ?? 0,
+    commentsCount: p.commentsCount ?? 0,
+    shareCount: p.shareCount ?? 0,
+    likedByMe: !!(p.likedByMe ?? p.likedByViewer),
+    savedByMe: !!(p.savedByMe ?? p.savedByViewer),
+    createdAt: p.createdAt,
+  });
 
   return (
     <div className="dashboard-page">
@@ -185,157 +205,91 @@ export default function PostsFeed() {
 
       <div className="dashboard-cards posts-feed-list">
         {posts.map((post) => {
-          const author = post.author || {};
-          const link = post.linkPreview || post.previewlink || {};
+          const postId = getPostId(post);
           return (
-            <div key={post._id} className="dashboard-card posts-feed-card">
-              <div className="posts-feed-header">
-                <div className="posts-feed-author">
-                  <div className="posts-feed-avatar">
-                    {(author.name || author.companyName || 'C')
-                      .toString()
-                      .trim()
-                      .slice(0, 1)
-                      .toUpperCase()}
-                  </div>
-                  <div>
-                    <div className="posts-feed-author-name">
-                      {author.companyName || author.name || 'Company'}
-                    </div>
-                    <div className="posts-feed-author-meta">
-                      {author.email || ''}
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div key={postId}>
+            <PostCard
+              post={normalizePostForCard(post)}
+              onLike={user ? () => handleToggleLike(postId) : undefined}
+              onComment={user ? () => openComments(postId) : undefined}
+              onShare={user && user.role === 'USER' ? () => setActiveSharePostId(postId) : undefined}
+              onSave={user && user.role === 'USER' ? () => handleToggleSave(postId) : undefined}
+              onAuthorClick={undefined}
+            />
 
-              {post.text && (
-                <p className="posts-feed-text">
-                  {post.text}
-                </p>
-              )}
-
-              {link?.url && (
-                <a
-                  href={link.url}
-                  className="posts-feed-link-preview"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {link.image && (
-                    <div className="posts-feed-link-image-wrap">
-                      <img src={link.image} alt={link.title || ''} />
-                    </div>
-                  )}
-                  <div className="posts-feed-link-body">
-                    <div className="posts-feed-link-title">{link.title || link.url}</div>
-                    {link.description && (
-                      <div className="posts-feed-link-desc">
-                        {link.description}
-                      </div>
-                    )}
-                    <div className="posts-feed-link-url">{link.url}</div>
-                  </div>
-                </a>
-              )}
-
-              <div className="posts-feed-stats">
-                <span>{post.likesCount || 0} likes</span>
-                <span>{post.commentsCount || 0} comments</span>
-                <span>{post.shareCount || 0} shares</span>
-              </div>
-
-              <div className="posts-feed-actions">
+            {/* Share input for this post when Share was clicked */}
+            {user && user.role === 'USER' && activeSharePostId === postId && (
+              <div className="posts-feed-share">
+                <input
+                  type="text"
+                  placeholder="Share with your thoughts..."
+                  value={shareText}
+                  onChange={(e) => setShareText(e.target.value)}
+                />
                 <button
                   type="button"
-                  className={`posts-feed-action-btn ${post.likedByViewer ? 'active' : ''}`}
-                  onClick={() => handleToggleLike(post._id)}
-                  disabled={!user}
+                  className="posts-feed-share-btn"
+                  onClick={() => handleShare(postId)}
+                  disabled={sharingPostId === postId}
                 >
-                  {post.likedByViewer ? 'Unlike' : 'Like'}
-                </button>
-                <button
-                  type="button"
-                  className={`posts-feed-action-btn ${post.savedByViewer ? 'active' : ''}`}
-                  onClick={() => handleToggleSave(post._id)}
-                  disabled={!user || user.role !== 'USER'}
-                >
-                  {post.savedByViewer ? 'Saved' : 'Save'}
+                  {sharingPostId === postId ? 'Sharing...' : 'Share'}
                 </button>
                 <button
                   type="button"
                   className="posts-feed-action-btn"
-                  onClick={() => openComments(post._id)}
-                  disabled={!user}
+                  onClick={() => setActiveSharePostId(null)}
                 >
-                  Comments
+                  Cancel
                 </button>
               </div>
+            )}
 
-              {user && user.role === 'USER' && (
-                <div className="posts-feed-share">
+            {/* Comments section when Comments was clicked */}
+            {activeCommentsPost === postId && (
+              <div className="posts-feed-comments">
+                <div className="posts-feed-comments-input">
                   <input
                     type="text"
-                    placeholder="Share with your thoughts..."
-                    value={shareText}
-                    onChange={(e) => setShareText(e.target.value)}
+                    placeholder="Write a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
                   />
                   <button
                     type="button"
-                    className="posts-feed-share-btn"
-                    onClick={() => handleShare(post._id)}
-                    disabled={sharingPostId === post._id}
+                    onClick={handleAddComment}
+                    disabled={commentsLoading}
                   >
-                    {sharingPostId === post._id ? 'Sharing...' : 'Share'}
+                    Post
                   </button>
                 </div>
-              )}
-
-              {activeCommentsPost === post._id && (
-                <div className="posts-feed-comments">
-                  <div className="posts-feed-comments-input">
-                    <input
-                      type="text"
-                      placeholder="Write a comment..."
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                    />
-                    <button
-                      type="button"
-                      onClick={handleAddComment}
-                      disabled={commentsLoading}
-                    >
-                      Post
-                    </button>
-                  </div>
-                  {commentsLoading ? (
-                    <p>Loading comments...</p>
-                  ) : comments.length === 0 ? (
-                    <p>No comments yet.</p>
-                  ) : (
-                    <ul className="posts-feed-comments-list">
-                      {comments.map((c) => {
-                        const a = c.author || c.user || {};
-                        return (
-                          <li key={c._id} className="posts-feed-comment">
-                            <div className="posts-feed-comment-avatar">
-                              {(a.name || 'U').toString().trim().slice(0, 1).toUpperCase()}
+                {commentsLoading ? (
+                  <p>Loading comments...</p>
+                ) : comments.length === 0 ? (
+                  <p>No comments yet.</p>
+                ) : (
+                  <ul className="posts-feed-comments-list">
+                    {comments.map((c) => {
+                      const a = c.author || c.user || {};
+                      return (
+                        <li key={c._id || c.id} className="posts-feed-comment">
+                          <div className="posts-feed-comment-avatar">
+                            {(a.name || 'U').toString().trim().slice(0, 1).toUpperCase()}
+                          </div>
+                          <div className="posts-feed-comment-body">
+                            <div className="posts-feed-comment-author">
+                              {a.name || 'User'}
                             </div>
-                            <div className="posts-feed-comment-body">
-                              <div className="posts-feed-comment-author">
-                                {a.name || 'User'}
-                              </div>
-                              <div className="posts-feed-comment-text">
-                                {c.body || c.text}
-                              </div>
+                            <div className="posts-feed-comment-text">
+                              {c.body || c.text}
                             </div>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  )}
-                </div>
-              )}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+            )}
             </div>
           );
         })}

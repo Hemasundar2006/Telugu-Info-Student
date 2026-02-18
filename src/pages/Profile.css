@@ -319,6 +319,13 @@
   font-size: 0.9rem;
 }
 
+.profile-helper-inline {
+  display: block;
+  margin-top: 0.35rem;
+  color: #6B7280;
+  font-size: 0.8rem;
+}
+
 .profile-scroll-x {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;

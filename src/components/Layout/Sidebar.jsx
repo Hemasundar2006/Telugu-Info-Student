@@ -83,7 +83,6 @@ export default function Sidebar({ open, onClose }) {
         <div
           className="sidebar-backdrop"
           onClick={onClose}
-          onMouseEnter={onClose}
           aria-hidden="true"
         />
       )}
