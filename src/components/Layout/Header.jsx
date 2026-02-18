@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FiMenu, FiLogOut, FiUser, FiSearch } from 'react-icons/fi';
+import { FiMenu, FiLogOut, FiUser, FiSearch, FiBell, FiPlus } from 'react-icons/fi';
+import { getNotifications } from '../../api/studentNotifications';
 import './Layout.css';
 
 export default function Header({ onMenuClick }) {
@@ -9,6 +10,8 @@ export default function Header({ onMenuClick }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const navClass = (path, exact) =>
     `app-nav-link${exact ? pathname === path : pathname.startsWith(path) ? ' active' : ''}`;
@@ -22,6 +25,7 @@ export default function Header({ onMenuClick }) {
         .toUpperCase()
         .slice(0, 2)
     : 'U';
+  const avatarImage = user?.profileImage || user?.profilePhoto;
 
   const handleLogout = () => {
     logout();
@@ -33,6 +37,31 @@ export default function Header({ onMenuClick }) {
   const isCompany = role === 'COMPANY';
   const profilePath = isCompany ? '/company/profile' : '/profile';
   const profileLabel = isCompany ? 'Company Profile' : 'Student Profile';
+  const showNotifications = role === 'USER';
+  const hasPaidPlan =
+    user?.plan?.isPaid === true ||
+    user?.hasPaidPlan === true ||
+    user?.isPaid === true;
+
+  useEffect(() => {
+    if (showNotifications && user) {
+      const loadNotifications = async () => {
+        try {
+          const res = await getNotifications({ isRead: false });
+          if (res?.success) {
+            setNotificationCount(res.unreadCount ?? 0);
+          }
+        } catch (err) {
+          // Silently fail - notifications are optional
+          console.error('Failed to load notifications:', err);
+        }
+      };
+      loadNotifications();
+      // Refresh every 30 seconds
+      const interval = setInterval(loadNotifications, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [showNotifications, user]);
 
   return (
     <header className="app-header app-header-dark">
@@ -46,15 +75,25 @@ export default function Header({ onMenuClick }) {
           <span className="logo-subtitle">Career Success Platform</span>
         </div>
       </Link>
-      <div className="header-search-wrap">
+      <form
+        className="header-search-wrap"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const q = searchTerm.trim();
+          if (!q) return;
+          navigate(`/search?query=${encodeURIComponent(q)}`);
+        }}
+      >
         <FiSearch size={18} className="search-icon" aria-hidden />
         <input
           type="search"
-          placeholder="Search..."
-          aria-label="Search"
+          placeholder="Search people..."
+          aria-label="Search people"
           className="header-search-input"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-      </div>
+      </form>
       <nav className="app-nav">
         <Link to="/dashboard" className={navClass('/dashboard', true)}>
           Home
@@ -73,6 +112,28 @@ export default function Header({ onMenuClick }) {
         </Link>
       </nav>
       <div className="header-right">
+        {role === 'USER' && (
+          <button
+            type="button"
+            className="header-add-post-btn"
+            onClick={() => navigate('/posts/new')}
+          >
+            <FiPlus size={18} />
+            <span>New post</span>
+          </button>
+        )}
+        {showNotifications && (
+          <Link
+            to="/student/notifications"
+            className="header-notification-btn"
+            aria-label={`Job notifications${notificationCount > 0 ? ` (${notificationCount} unread)` : ''}`}
+          >
+            <FiBell size={20} />
+            {notificationCount > 0 && (
+              <span className="notification-badge">{notificationCount > 99 ? '99+' : notificationCount}</span>
+            )}
+          </Link>
+        )}
         <div className="user-menu-wrap">
           <button
             type="button"
@@ -80,8 +141,23 @@ export default function Header({ onMenuClick }) {
             onClick={() => setMenuOpen((o) => !o)}
             aria-expanded={menuOpen}
           >
-            <span className="avatar">{initials}</span>
-            <span className="user-name">{user?.name}</span>
+            <span className="avatar">
+              {avatarImage ? (
+                <img src={avatarImage} alt={user?.name || 'Profile'} />
+              ) : (
+                initials
+              )}
+            </span>
+            <span className="user-name">
+              {user?.name}
+              {hasPaidPlan && (
+                <img
+                  src="/verified.png"
+                  alt="Verified"
+                  className="header-user-verified"
+                />
+              )}
+            </span>
           </button>
           {menuOpen && (
             <>

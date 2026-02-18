@@ -48,14 +48,8 @@ export default function PublicLayout({ children }) {
           </div>
           <div className="mobile-nav-drawer-links">
             <Link to="/" className={`nav-link nav-link-drawer ${isActive('/') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>Home</Link>
-            <Link to="/about" className={`nav-link nav-link-drawer ${isActive('/about') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>About</Link>
             <Link to="/tech-news" className={`nav-link nav-link-drawer ${isActive('/tech-news') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>Tech News</Link>
-            <Link to="/ai-career" className={`nav-link nav-link-premium nav-link-drawer ${isActive('/ai-career') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>
-              AI Career <span className="nav-premium-badge" title="Premium">★</span>
-            </Link>
             <Link to="/pricing" className={`nav-link nav-link-drawer ${isActive('/pricing') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>Pricing</Link>
-            <Link to="/services" className={`nav-link nav-link-drawer ${isActive('/services') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>Services</Link>
-            <Link to="/contact" className={`nav-link nav-link-drawer ${isActive('/contact') ? 'active' : ''}`} onClick={() => setNavOpen(false)}>Contact</Link>
             <div className="mobile-nav-drawer-ctas">
               <Link to="/login" className="nav-link nav-link-drawer nav-link-drawer-login" onClick={() => setNavOpen(false)}>Login</Link>
               <Link to="/register" className="nav-link nav-link-drawer nav-link-drawer-register" onClick={() => setNavOpen(false)}>Register</Link>

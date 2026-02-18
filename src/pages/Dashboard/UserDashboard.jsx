@@ -12,11 +12,11 @@ export default function UserDashboard() {
       <p className="dashboard-subtitle">Student Dashboard</p>
 
       <div className="dashboard-cards">
-        <Link to="/student/notifications" className="dashboard-card">
+        {/* <Link to="/student/notifications" className="dashboard-card">
           <FiBell size={32} />
           <h3>Job Notifications</h3>
           <p>New jobs matching your qualification</p>
-        </Link>
+        </Link> */}
         <Link to="/student/jobs" className="dashboard-card">
           <FiBriefcase size={32} />
           <h3>Job Listings</h3>

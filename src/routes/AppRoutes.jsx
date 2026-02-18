@@ -13,12 +13,14 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import Dashboard from '../pages/Dashboard/Dashboard';
 import DocumentList from '../pages/Documents/DocumentList';
+import DocumentsPage from '../pages/Documents/DocumentsPage';
 import HallTickets from '../pages/Documents/HallTickets';
 import Results from '../pages/Documents/Results';
 import Roadmaps from '../pages/Documents/Roadmaps';
 import UploadDocument from '../pages/Documents/UploadDocument';
 import PendingDocuments from '../pages/Documents/PendingDocuments';
 import MyUploads from '../pages/Documents/MyUploads';
+import TicketsPage from '../pages/Tickets/TicketsPage';
 import CreateTicket from '../pages/Tickets/CreateTicket';
 import MyTickets from '../pages/Tickets/MyTickets';
 import SupportTickets from '../pages/Tickets/SupportTickets';
@@ -30,6 +32,7 @@ import ActivityDashboard from '../pages/Activities/ActivityDashboard';
 import ActivityStats from '../pages/Activities/ActivityStats';
 import UserActivities from '../pages/Activities/UserActivities';
 import CollegePredictor from '../pages/Predictor/CollegePredictor';
+import AICareerPage from '../pages/AICareer/AICareerPage';
 import AiCareer from '../pages/AICareer/AiCareer';
 import Profile from '../pages/Profile';
 import Unauthorized from '../pages/Unauthorized';
@@ -37,14 +40,21 @@ import ForgotPassword from '../pages/ForgotPassword';
 import CompanyRegister from '../pages/Company/CompanyRegister';
 import CompanyLogin from '../pages/Company/CompanyLogin';
 import CompanyProfile from '../pages/Company/CompanyProfile';
+import CompanyProfileOverview from '../pages/Company/CompanyProfileOverview';
 import CompanyVerification from '../pages/Company/CompanyVerification';
 import CompanyPosts from '../pages/Company/CompanyPosts';
 import AdminJobList from '../pages/Jobs/AdminJobList';
 import CreateEditJob from '../pages/Jobs/CreateEditJob';
 import AdminJobDetail from '../pages/Jobs/AdminJobDetail';
 import PostsFeed from '../pages/PostsFeed';
+import CompanyPostsFeed from '../pages/CompanyPostsFeed';
+import Feed from '../pages/Feed';
+import NewPost from '../pages/NewPost';
 import StudentNotifications from '../pages/Student/StudentNotifications';
 import StudentJobListings from '../pages/Student/StudentJobListings';
+import UserPublicProfile from '../pages/Users/UserPublicProfile';
+import MyProfileOverview from '../pages/MyProfileOverview';
+import SearchPeople from '../pages/SearchPeople';
 
 import { useAuth } from '../context/AuthContext';
 
@@ -130,6 +140,14 @@ export default function AppRoutes() {
           path="/company/profile"
           element={
             <ProtectedRoute allowedRoles={['COMPANY']}>
+              <Layout><CompanyProfileOverview /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/company/profile/edit"
+          element={
+            <ProtectedRoute allowedRoles={['COMPANY']}>
               <Layout><CompanyProfile /></Layout>
             </ProtectedRoute>
           }
@@ -207,6 +225,22 @@ export default function AppRoutes() {
           }
         />
         <Route
+          path="/me"
+          element={
+            <ProtectedRoute>
+              <Layout><MyProfileOverview /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <ProtectedRoute>
+              <Layout><SearchPeople /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/posts"
           element={
             <ProtectedRoute>
@@ -214,8 +248,40 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/posts/new"
+          element={
+            <ProtectedRoute allowedRoles={['USER']}>
+              <Layout><NewPost /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/feed"
+          element={
+            <ProtectedRoute>
+              <Layout><Feed /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/company-posts"
+          element={
+            <ProtectedRoute>
+              <Layout><CompanyPostsFeed /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/users/:userId"
+          element={
+            <ProtectedRoute>
+              <Layout><UserPublicProfile /></Layout>
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/documents" element={<ProtectedRoute><Layout><DocumentList /></Layout></ProtectedRoute>} />
+        <Route path="/documents" element={<ProtectedRoute allowedRoles={['USER']}><Layout><DocumentsPage /></Layout></ProtectedRoute>} />
         <Route path="/documents/hall-tickets" element={<ProtectedRoute><Layout><HallTickets /></Layout></ProtectedRoute>} />
         <Route path="/documents/results" element={<ProtectedRoute><Layout><Results /></Layout></ProtectedRoute>} />
         <Route path="/documents/roadmaps" element={<ProtectedRoute><Layout><Roadmaps /></Layout></ProtectedRoute>} />
@@ -224,8 +290,8 @@ export default function AppRoutes() {
         <Route path="/documents/pending" element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']}><Layout><PendingDocuments /></Layout></ProtectedRoute>} />
         <Route path="/documents/approve" element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']}><Layout><PendingDocuments /></Layout></ProtectedRoute>} />
 
+        <Route path="/tickets" element={<ProtectedRoute allowedRoles={['USER']}><Layout><TicketsPage /></Layout></ProtectedRoute>} />
         <Route path="/tickets/new" element={<ProtectedRoute allowedRoles={['USER']}><Layout><CreateTicket /></Layout></ProtectedRoute>} />
-        <Route path="/tickets" element={<ProtectedRoute allowedRoles={['USER']}><Layout><MyTickets /></Layout></ProtectedRoute>} />
         <Route path="/tickets/support" element={<ProtectedRoute allowedRoles={['SUPPORT']}><Layout><SupportTickets /></Layout></ProtectedRoute>} />
         <Route path="/tickets/completed" element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']}><Layout><CompletedTickets /></Layout></ProtectedRoute>} />
         <Route
@@ -259,7 +325,7 @@ export default function AppRoutes() {
         <Route path="/activities/user/:userId" element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']}><Layout><UserActivities /></Layout></ProtectedRoute>} />
 
         <Route path="/predictor" element={<ProtectedRoute><Layout><CollegePredictor /></Layout></ProtectedRoute>} />
-        <Route path="/ai-career" element={<ProtectedRoute><Layout><AiCareer /></Layout></ProtectedRoute>} />
+        <Route path="/ai-career" element={<ProtectedRoute><Layout><AICareerPage /></Layout></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

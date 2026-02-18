@@ -1,12 +1,12 @@
 import api from './config';
 
-// Create a new company post (role: COMPANY)
+// Create a new post (role: COMPANY or USER)
 export const createPost = (payload) => api.post('/posts', payload);
 
-// Update post (role: COMPANY; must be author). Body: { text?, imageUrl?, linkPreview? }
+// Update post (role: COMPANY or USER; must be author). Body: { text?, imageUrl?, linkPreview? }
 export const updatePost = (postId, payload) => api.put(`/posts/${postId}`, payload);
 
-// Delete post (role: COMPANY; must be author)
+// Delete post (role: COMPANY or USER; must be author)
 export const deletePost = (postId) => api.delete(`/posts/${postId}`);
 
 // Feed: latest or daily
@@ -33,6 +33,10 @@ export const getComments = (postId, params) =>
 export const sharePost = (postId, payload) =>
   api.post(`/posts/${postId}/share`, payload);
 
-// Company-only: share tracking
+// Share tracking (role: COMPANY or USER; must be post author)
 export const getPostShares = (postId) => api.get(`/posts/${postId}/shares`);
+
+// Posts by author (role: USER or COMPANY can view). Same shape as main feed.
+export const getUserPosts = (userId, params = {}) =>
+  api.get(`/posts/user/${userId}`, { params: { page: 1, limit: 10, ...params } });
 

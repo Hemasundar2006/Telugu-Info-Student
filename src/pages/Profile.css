@@ -172,6 +172,20 @@
   color: #1F2937;
 }
 
+.profile-repeat-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.profile-inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.25rem 0 0.75rem;
+}
+
 .profile-repeat-list {
   display: flex;
   flex-direction: column;
@@ -234,6 +248,42 @@
   transform: translateY(-0.5px);
 }
 
+.profile-skill-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.profile-skill-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-skill-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.profile-skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 118, 110, 0.25);
+  background: rgba(15, 118, 110, 0.08);
+  color: #0F766E;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.profile-skill-chip:hover {
+  border-color: rgba(15, 118, 110, 0.35);
+  background: rgba(15, 118, 110, 0.12);
+}
+
 .profile-empty-text {
   font-size: 0.85rem;
   color: #6B7280;
@@ -262,6 +312,10 @@
   margin-top: 0.5rem;
 }
 
+.profile-actions-left {
+  justify-content: flex-start;
+}
+
 .profile-btn {
   border-radius: 999px;
   padding: 0.5rem 1.25rem;
@@ -270,12 +324,25 @@
   border: none;
   cursor: pointer;
   transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.1s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .profile-btn.primary {
   background: #0F766E;
   color: #fff;
   box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
+}
+
+.profile-btn.secondary {
+  background: #E5E7EB;
+  color: #1F2937;
+}
+
+.profile-btn.secondary:hover {
+  background: #D1D5DB;
 }
 
 .profile-btn.danger {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   getUserProfileByEmail,
@@ -58,7 +58,8 @@ const EMPTY_PROFILE = {
 };
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -66,6 +67,9 @@ export default function Profile() {
   const [profileId, setProfileId] = useState(null);
   const [form, setForm] = useState(EMPTY_PROFILE);
   const [activeTab, setActiveTab] = useState('user');
+  const [skillInput, setSkillInput] = useState('');
+  const [hobbyInput, setHobbyInput] = useState('');
+  const [languageInput, setLanguageInput] = useState('');
 
   const userEmail = user?.email || '';
 
@@ -139,6 +143,72 @@ export default function Profile() {
   };
 
   const getCommaListValue = (arr) => (Array.isArray(arr) ? arr.join(', ') : '');
+
+  const addSkill = () => {
+    const value = (skillInput || '').trim();
+    if (!value) return;
+    setForm((prev) => {
+      const existing = Array.isArray(prev.skills) ? prev.skills : [];
+      const normalized = value.toLowerCase();
+      if (existing.some((s) => (s || '').toLowerCase() === normalized)) {
+        return prev;
+      }
+      return { ...prev, skills: [...existing, value] };
+    });
+    setSkillInput('');
+  };
+
+  const removeSkill = (skill) => {
+    setForm((prev) => {
+      const existing = Array.isArray(prev.skills) ? prev.skills : [];
+      return { ...prev, skills: existing.filter((s) => s !== skill) };
+    });
+  };
+
+  const addHobby = () => {
+    const value = (hobbyInput || '').trim();
+    if (!value) return;
+    setForm((prev) => {
+      const existing = Array.isArray(prev.hobbies) ? prev.hobbies : [];
+      const normalized = value.toLowerCase();
+      if (existing.some((h) => (h || '').toLowerCase() === normalized)) {
+        return prev;
+      }
+      return { ...prev, hobbies: [...existing, value] };
+    });
+    setHobbyInput('');
+  };
+
+  const removeHobby = (hobby) => {
+    setForm((prev) => {
+      const existing = Array.isArray(prev.hobbies) ? prev.hobbies : [];
+      return { ...prev, hobbies: existing.filter((h) => h !== hobby) };
+    });
+  };
+
+  const addLanguage = () => {
+    const value = (languageInput || '').trim();
+    if (!value) return;
+    setForm((prev) => {
+      const existing = Array.isArray(prev.languages) ? prev.languages : [];
+      const normalized = value.toLowerCase();
+      if (existing.some((l) => (l?.name || '').toLowerCase() === normalized)) {
+        return prev;
+      }
+      return {
+        ...prev,
+        languages: [...existing, { name: value, proficiency: 'Intermediate' }],
+      };
+    });
+    setLanguageInput('');
+  };
+
+  const removeLanguage = (name) => {
+    setForm((prev) => {
+      const existing = Array.isArray(prev.languages) ? prev.languages : [];
+      return { ...prev, languages: existing.filter((l) => l?.name !== name) };
+    });
+  };
 
   const handleArrayItemChange = (section, index, field, value) => {
     setForm((prev) => {
@@ -245,6 +315,30 @@ export default function Profile() {
     });
   };
 
+  const ensureProjectMedia = (index) => {
+    setForm((prev) => {
+      const projects = Array.isArray(prev.projects) ? prev.projects : [];
+      return {
+        ...prev,
+        projects: projects.map((project, i) => {
+          if (i !== index) return project;
+          const media = Array.isArray(project.media) ? project.media : [];
+          return media.length > 0 ? project : { ...project, media: [{}] };
+        }),
+      };
+    });
+  };
+
+  const clearProjectMedia = (index) => {
+    setForm((prev) => {
+      const projects = Array.isArray(prev.projects) ? prev.projects : [];
+      return {
+        ...prev,
+        projects: projects.map((project, i) => (i === index ? { ...project, media: [] } : project)),
+      };
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -312,6 +406,11 @@ export default function Profile() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleSignOut = () => {
+    logout();
+    navigate('/');
   };
 
   if (!user) {
@@ -983,15 +1082,43 @@ export default function Profile() {
               <div className="profile-section-subtitle">Current Education Snapshot</div>
               <div className="profile-grid">
                 <label className="profile-field">
-                  <span>Skills (comma separated)</span>
-                  <input
-                    type="text"
-                    value={getCommaListValue(form.skills)}
-                    onChange={(e) =>
-                      handleCommaListChange('skills', e.target.value)
-                    }
-                    placeholder="JavaScript, React, Node.js"
-                  />
+                  <span>Skills</span>
+                  <div className="profile-skill-row">
+                    <input
+                      type="text"
+                      value={skillInput}
+                      onChange={(e) => setSkillInput(e.target.value)}
+                      placeholder="JavaScript, React, Node.js"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          addSkill();
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="profile-chip-btn"
+                      onClick={addSkill}
+                    >
+                      Add
+                    </button>
+                  </div>
+                  {Array.isArray(form.skills) && form.skills.length > 0 && (
+                    <div className="profile-skill-chips">
+                      {form.skills.map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          className="profile-skill-chip"
+                          onClick={() => removeSkill(s)}
+                          title="Remove"
+                        >
+                          {s} <span aria-hidden>×</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </label>
 
                 <label className="profile-field">
@@ -1090,13 +1217,21 @@ export default function Profile() {
 
               <div className="profile-repeat-header">
                 <span>Projects</span>
-                <button
-                  type="button"
-                  className="profile-chip-btn"
-                  onClick={handleProjectAdd}
-                >
-                  + Add Project
-                </button>
+                <div className="profile-repeat-actions">
+                  <Link to="/posts" className="profile-chip-btn">
+                    Posts Feed
+                  </Link>
+                  <Link to="/company-posts" className="profile-chip-btn">
+                    Company Posts
+                  </Link>
+                  <button
+                    type="button"
+                    className="profile-chip-btn"
+                    onClick={handleProjectAdd}
+                  >
+                    + Add Project
+                  </button>
+                </div>
               </div>
 
               <div className="profile-repeat-list">
@@ -1200,6 +1335,22 @@ export default function Profile() {
                       </div>
 
                       <div className="profile-section-subtitle">Media (optional)</div>
+                      <div className="profile-inline-actions">
+                        <button
+                          type="button"
+                          className="profile-chip-btn"
+                          onClick={() => ensureProjectMedia(index)}
+                        >
+                          Add Media
+                        </button>
+                        <button
+                          type="button"
+                          className="profile-chip-btn subtle"
+                          onClick={() => clearProjectMedia(index)}
+                        >
+                          Clear Media
+                        </button>
+                      </div>
                       <div className="profile-grid">
                         <label className="profile-field">
                           <span>Media URL</span>
@@ -1336,40 +1487,105 @@ export default function Profile() {
               <h2>Preferences & Extras</h2>
               <div className="profile-grid">
                 <label className="profile-field">
-                  <span>Hobbies (comma separated)</span>
-                  <input
-                    type="text"
-                    value={getCommaListValue(form.hobbies)}
-                    onChange={(e) =>
-                      handleCommaListChange('hobbies', e.target.value)
-                    }
-                    placeholder="Reading, Coding, Music"
-                  />
+                  <span>Hobbies</span>
+                  <div className="profile-skill-row">
+                    <input
+                      type="text"
+                      value={hobbyInput}
+                      onChange={(e) => setHobbyInput(e.target.value)}
+                      placeholder="Reading, Coding, Music"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          addHobby();
+                        }
+                      }}
+                    />
+                    <button type="button" className="profile-chip-btn" onClick={addHobby}>
+                      Add
+                    </button>
+                  </div>
+                  {Array.isArray(form.hobbies) && form.hobbies.length > 0 && (
+                    <div className="profile-skill-chips">
+                      {form.hobbies.map((h) => (
+                        <button
+                          key={h}
+                          type="button"
+                          className="profile-skill-chip"
+                          onClick={() => removeHobby(h)}
+                          title="Remove"
+                        >
+                          {h} <span aria-hidden>×</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </label>
 
                 <label className="profile-field">
-                  <span>Languages (simple list)</span>
-                  <input
-                    type="text"
-                    value={getCommaListValue(
-                      (form.languages || []).map((l) => l.name || '')
-                    )}
-                    onChange={(e) => {
-                      const names = e.target.value
-                        .split(',')
-                        .map((v) => v.trim())
-                        .filter(Boolean);
-                      setForm((prev) => ({
-                        ...prev,
-                        languages: names.map((name) => ({
-                          name,
-                          proficiency: 'Intermediate',
-                        })),
-                      }));
-                    }}
-                    placeholder="English, Telugu, Hindi"
-                  />
+                  <span>Languages</span>
+                  <div className="profile-skill-row">
+                    <input
+                      type="text"
+                      value={languageInput}
+                      onChange={(e) => setLanguageInput(e.target.value)}
+                      placeholder="English, Telugu, Hindi"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          addLanguage();
+                        }
+                      }}
+                    />
+                    <button type="button" className="profile-chip-btn" onClick={addLanguage}>
+                      Add
+                    </button>
+                  </div>
+                  {Array.isArray(form.languages) && form.languages.length > 0 && (
+                    <div className="profile-skill-chips">
+                      {form.languages
+                        .map((l) => l?.name)
+                        .filter(Boolean)
+                        .map((name) => (
+                          <button
+                            key={name}
+                            type="button"
+                            className="profile-skill-chip"
+                            onClick={() => removeLanguage(name)}
+                            title="Remove"
+                          >
+                            {name} <span aria-hidden>×</span>
+                          </button>
+                        ))}
+                    </div>
+                  )}
                 </label>
+              </div>
+
+              <div className="profile-section-subtitle">Support</div>
+              <div className="profile-actions profile-actions-left">
+                <Link to="/tickets?tab=create" className="profile-btn secondary">
+                  Create Ticket
+                </Link>
+                <Link to="/tickets?tab=list" className="profile-btn secondary">
+                  My Tickets
+                </Link>
+                <Link to="/student/notifications" className="profile-btn secondary">
+                  Notifications
+                </Link>
+                <Link to="/documents" className="profile-btn secondary">
+                  Documents
+                </Link>
+                <Link to="/posts" className="profile-btn secondary">
+                  Posts Feed
+                </Link>
+              </div>
+
+              <div className="profile-section-subtitle">Account</div>
+              <div className="profile-actions profile-actions-left">
+                <button type="button" className="profile-btn danger" onClick={handleSignOut}>
+                  Sign out
+                </button>
               </div>
             </section>
           )}

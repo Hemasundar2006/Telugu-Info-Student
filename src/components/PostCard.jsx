@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { FiMoreVertical, FiEdit2, FiTrash2, FiBookmark } from 'react-icons/fi';
 
 const PostCard = ({
   post,
@@ -7,6 +9,12 @@ const PostCard = ({
   onShare,
   onSave,
   onAuthorClick,
+  onEdit,
+  onDelete,
+  onViewShares,
+  menuOpen,
+  onMenuToggle,
+  isDeleting,
 }) => {
   const {
     id,
@@ -22,6 +30,12 @@ const PostCard = ({
     createdAt,
   } = post;
 
+  const authorId = author?._id || author?.id;
+  const authorHasPaidPlan =
+    author?.plan?.isPaid === true ||
+    author?.hasPaidPlan === true ||
+    author?.isPaid === true;
+
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const d = new Date(dateStr);
@@ -36,11 +50,41 @@ const PostCard = ({
     <article className="post-card" style={styles.card}>
       {/* Author: profile image + name + menu */}
       <header style={styles.header}>
-        <button
-          type="button"
-          onClick={() => onAuthorClick?.(author)}
-          style={styles.authorRow}
-        >
+        {authorId && !onAuthorClick ? (
+          <Link to={`/users/${authorId}`} style={styles.authorRow}>
+            <div style={styles.avatarWrapper}>
+              {author?.profileImage ? (
+                <img
+                  src={author.profileImage}
+                  alt={author.name}
+                  style={styles.avatar}
+                />
+              ) : (
+                <div style={styles.avatarPlaceholder}>
+                  {(author?.name || author?.companyName || 'U')[0].toUpperCase()}
+                </div>
+              )}
+            </div>
+            <div style={styles.authorInfo}>
+              <span style={styles.authorName}>
+                {(author?.companyName || author?.name) ?? 'Unknown'}
+                {authorHasPaidPlan && (
+                  <span style={styles.verifiedTick} title="Verified company">
+                    <img src="/verified.png" alt="Verified" style={styles.verifiedImg} />
+                  </span>
+                )}
+              </span>
+              {createdAt && (
+                <span style={styles.date}>{formatDate(createdAt)}</span>
+              )}
+            </div>
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={() => onAuthorClick?.(author)}
+            style={styles.authorRow}
+          >
           <div style={styles.avatarWrapper}>
             {author?.profileImage ? (
               <img
@@ -55,17 +99,86 @@ const PostCard = ({
             )}
           </div>
           <div style={styles.authorInfo}>
-<span style={styles.authorName}>
+          <span style={styles.authorName}>
                 {(author?.companyName || author?.name) ?? 'Unknown'}
+                {authorHasPaidPlan && (
+                  <span style={styles.verifiedTick} title="Verified company">
+                    <img src="/verified.png" alt="Verified" style={styles.verifiedImg} />
+                  </span>
+                )}
               </span>
             {createdAt && (
               <span style={styles.date}>{formatDate(createdAt)}</span>
             )}
           </div>
-        </button>
-        <button type="button" aria-label="More options" style={styles.menuBtn}>
-          ⋮
-        </button>
+          </button>
+        )}
+        {(onEdit || onDelete || onViewShares) && (
+          <div style={styles.menuWrap}>
+            <button
+              type="button"
+              aria-label="More options"
+              style={styles.menuBtn}
+              onClick={onMenuToggle}
+              disabled={isDeleting}
+            >
+              <FiMoreVertical size={18} />
+            </button>
+            {menuOpen && (
+              <>
+                <div
+                  style={styles.menuBackdrop}
+                  aria-hidden
+                  onClick={onMenuToggle}
+                />
+                <div style={styles.menuDropdown}>
+                  {onEdit && (
+                    <button
+                      type="button"
+                      style={styles.menuItem}
+                      onClick={() => {
+                        onEdit();
+                        onMenuToggle();
+                      }}
+                    >
+                      <FiEdit2 size={16} /> Edit
+                    </button>
+                  )}
+                  {onViewShares && (
+                    <button
+                      type="button"
+                      style={styles.menuItem}
+                      onClick={() => {
+                        onViewShares();
+                        onMenuToggle();
+                      }}
+                    >
+                      <FiBookmark size={16} /> View shares
+                    </button>
+                  )}
+                  {onDelete && (
+                    <button
+                      type="button"
+                      style={styles.menuItemDanger}
+                      onClick={() => {
+                        onDelete();
+                        onMenuToggle();
+                      }}
+                      disabled={isDeleting}
+                    >
+                      <FiTrash2 size={16} /> {isDeleting ? 'Deleting…' : 'Delete'}
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+        {!(onEdit || onDelete || onViewShares) && (
+          <button type="button" aria-label="More options" style={styles.menuBtn}>
+            ⋮
+          </button>
+        )}
       </header>
 
       {/* Media image (imageUrl) */}
@@ -144,6 +257,17 @@ const PostCard = ({
           <span style={savedByMe ? styles.iconSaved : {}}>🔖</span>
           <span>Save</span>
         </button>
+        {onViewShares && (
+          <button
+            type="button"
+            onClick={() => onViewShares()}
+            style={styles.actionBtn}
+            title="View share tracking"
+          >
+            <FiBookmark size={18} />
+            <span>Tracking</span>
+          </button>
+        )}
       </footer>
     </article>
   );
@@ -202,14 +326,29 @@ const styles = {
     alignItems: 'flex-start',
   },
   authorName: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 4,
     fontWeight: 600,
     fontSize: 14,
     color: '#111',
+  },
+  verifiedTick: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  verifiedImg: {
+    width: 16,
+    height: 16,
   },
   date: {
     fontSize: 12,
     color: '#666',
     marginTop: 2,
+  },
+  menuWrap: {
+    position: 'relative',
   },
   menuBtn: {
     border: 'none',
@@ -218,6 +357,55 @@ const styles = {
     padding: 4,
     fontSize: 18,
     color: '#666',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  menuBackdrop: {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 10,
+  },
+  menuDropdown: {
+    position: 'absolute',
+    top: '100%',
+    right: 0,
+    marginTop: 4,
+    minWidth: 140,
+    padding: 4,
+    background: '#fff',
+    border: '1px solid #eee',
+    borderRadius: 8,
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+    zIndex: 20,
+  },
+  menuItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    width: '100%',
+    padding: '8px 12px',
+    border: 'none',
+    background: 'none',
+    fontSize: 14,
+    color: '#111',
+    cursor: 'pointer',
+    borderRadius: 6,
+    textAlign: 'left',
+  },
+  menuItemDanger: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    width: '100%',
+    padding: '8px 12px',
+    border: 'none',
+    background: 'none',
+    fontSize: 14,
+    color: '#dc2626',
+    cursor: 'pointer',
+    borderRadius: 6,
+    textAlign: 'left',
   },
   mediaWrap: {
     width: 'min(640px, 100%)',

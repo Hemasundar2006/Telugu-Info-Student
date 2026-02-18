@@ -1,0 +1,115 @@
+.ai-career-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.ai-career-page h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  color: #1F2937;
+}
+
+.ai-career-page .section-desc {
+  margin: 0 0 1rem;
+  color: #4B5563;
+  font-size: 0.95rem;
+}
+
+.ai-career-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #E5E7EB;
+}
+
+.ai-career-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #6B7280;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: -2px;
+}
+
+.ai-career-tab:hover {
+  color: #0F766E;
+}
+
+.ai-career-tab.active {
+  color: #0F766E;
+  border-bottom-color: #0F766E;
+}
+
+.roadmaps-section {
+  margin-top: 1rem;
+}
+
+.roadmaps-section .doc-filters {
+  margin-bottom: 1rem;
+}
+
+.roadmaps-section .doc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.roadmaps-section .doc-card {
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.roadmaps-section .doc-card .doc-type {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0F766E;
+  text-transform: uppercase;
+}
+
+.roadmaps-section .doc-card h3 {
+  margin: 0.5rem 0;
+  font-size: 1.05rem;
+  color: #1F2937;
+}
+
+.roadmaps-section .doc-card .doc-meta {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: #4B5563;
+}
+
+.roadmaps-section .doc-card .btn-secondary {
+  display: inline-block;
+  padding: 8px 14px;
+  background: #0F766E;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
+
+.roadmaps-section .doc-card .btn-secondary:hover {
+  background: #0D5C56;
+}
+
+.roadmaps-section .doc-section-empty {
+  margin: 0;
+  padding: 1.25rem;
+  color: #6B7280;
+  font-size: 0.95rem;
+  background: #F9FAFB;
+  border-radius: 10px;
+  border: 1px dashed #E5E7EB;
+}

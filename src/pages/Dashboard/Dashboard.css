@@ -146,6 +146,65 @@
   border-color: var(--color-border);
 }
 
+/* Posts feed sections */
+.posts-feed-section {
+  margin-bottom: 3rem;
+}
+
+.posts-feed-section:last-child {
+  margin-bottom: 0;
+}
+
+.posts-feed-section-header {
+  margin-bottom: 1rem;
+}
+
+.posts-feed-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0 1.25rem;
+  flex-wrap: wrap;
+}
+
+.posts-feed-toggle-btn {
+  border: 1px solid #E5E7EB;
+  background: #fff;
+  color: #1F2937;
+  border-radius: 999px;
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  transition: transform 0.08s ease, background 0.12s ease, border-color 0.12s ease;
+}
+
+.posts-feed-toggle-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.35);
+}
+
+.posts-feed-toggle-btn.active {
+  background: rgba(15, 118, 110, 0.12);
+  border-color: rgba(15, 118, 110, 0.35);
+  color: #0F766E;
+}
+
+.posts-feed-toggle-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.12);
+  color: #0F766E;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
 /* Job postings block (company dashboard) */
 .dashboard-card-jobs {
   cursor: default;

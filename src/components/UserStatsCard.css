@@ -1,0 +1,145 @@
+.user-stats-card {
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.user-stats-header {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.user-stats-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid #E5E7EB;
+  background: #F3F4F6;
+  flex: 0 0 auto;
+}
+
+.user-stats-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.user-stats-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.22), rgba(59, 130, 246, 0.18));
+}
+
+.user-stats-meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.user-stats-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.user-stats-name {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #111827;
+}
+
+.user-stats-verified {
+  margin-left: 0.35rem;
+  width: 18px;
+  height: 18px;
+}
+
+.user-stats-role {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.12);
+  color: #0F766E;
+  font-weight: 600;
+}
+
+.user-stats-id {
+  margin-top: 2px;
+  font-size: 0.78rem;
+  color: #6B7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-stats-follow-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #0F766E;
+  color: #fff;
+  transition: transform 0.08s ease, opacity 0.12s ease;
+}
+
+.user-stats-follow-btn.following {
+  background: #E5E7EB;
+  color: #111827;
+}
+
+.user-stats-follow-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.user-stats-follow-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.user-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+}
+
+.user-stats-metric {
+  text-decoration: none;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 0.75rem;
+  background: #F9FAFB;
+  color: inherit;
+}
+
+.user-stats-metric:hover {
+  background: #F3F4F6;
+}
+
+.user-stats-metric-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.user-stats-metric-label {
+  margin-top: 2px;
+  font-size: 0.78rem;
+  color: #6B7280;
+}
+
+@media (max-width: 768px) {
+  .user-stats-header {
+    align-items: flex-start;
+  }
+
+  .user-stats-follow-btn {
+    padding: 0.5rem 0.8rem;
+  }
+}
+

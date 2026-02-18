@@ -102,6 +102,10 @@ export default function CompanyRegister() {
           <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
             Create a recruiter account. Fill company profile after signup.
           </p>
+          <p className="mt-1 text-xs text-amber-700 dark:text-amber-300">
+            The account will go through verification. After our team verifies your details,
+            your company profile will be approved.
+          </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="px-6 py-5 space-y-4">
